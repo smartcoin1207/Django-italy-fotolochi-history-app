@@ -25,7 +25,7 @@ SECRET_KEY = 'c)9f6043gu!w9^xsazicvoqow39axtp(e=25$#w0+63vr%69t+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['159.65.115.145']
+ALLOWED_HOSTS = ['fotolocchi.man-super.com']
 
 
 # Application definition
