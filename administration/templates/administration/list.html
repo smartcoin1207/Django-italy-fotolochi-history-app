@@ -1,0 +1,53 @@
+{% extends "administration/base.html" %}
+{% block main %}
+{% csrf_token %}
+
+<ul class="nav">
+    <li><a href="/administration/get_new/">Get New Images</a></li>
+    {% if request.user.is_authenticated %}
+        <li><a href="/administration/logout/">Logout</a></li>
+    {% endif %}
+</ul>
+<div class="l-wrapper">
+
+    {% if msg %}
+        <p style="color: green">{{ msg }}</p>
+    {% endif %}
+  <table id="example" class="ui celled table" style="width:100%;margin: auto;">
+    <thead>
+    <tr>
+      <th>Thumbnail</th>
+      <th>Title</th>
+      <th>File name</th>
+      <th>Metadata</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+
+    {% for row in list %}
+    <tr>
+      <td><img src="/media/{{ row.file_name.thumb_name }}" alt="current img" data-object-fit="contain"></td>
+      <td>{{ row.title }}</td>
+      <td>{{ row.file_name.file_name }}</td>
+      <td>No</td>
+      <td>
+          <a class="editBtn" href="{% url 'administration:edit' data_id=row.id %}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+          <button class="delBtn" type="button"><i class="fa fa-trash" aria-hidden="true"></i></button>
+      </td>
+    </tr>
+    {% endfor %}
+
+    </tbody>
+    <tfoot>
+    <tr>
+      <th style="color: transparent;">thumb</th>
+      <th>Title</th>
+      <th>File name</th>
+      <th>Metadata</th>
+      <th style="color: transparent;">edit</th>
+    </tr>
+    </tfoot>
+  </table>
+
+{% endblock %}

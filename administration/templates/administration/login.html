@@ -1,0 +1,37 @@
+{% extends "administration/base.html" %}
+{#% load static %#}
+{% block main %}
+<div class="l-content">
+<!--    <script src="{#% static 'company/js/login.js' %#}"></script>-->
+    <main class="l-contentText" role="main">
+        <div class="b-underHeader">
+        </div>
+        <div class="container g-container g-clearfix">
+            <div id="login" class="wrapper">
+
+                <form id="login_form" class="ui form" action="{% url 'administration:login' %}" method="post">
+                    {% csrf_token %}
+                    <h2 class="b-form__header form-signin-heading">Login</h2>
+
+                    {% for field in form %}
+                    <div class="field fourteen wide">
+                        <label for="{{field.name}}" class="b-inputBlock__label validate" data-error="wrong">{{field.label}}</label>
+                        {{field}}
+                        
+                    </div>
+                    {% endfor %}
+
+                    <div>
+                        <button type="submit" class="ui black submit button">Login</button>
+                    </div>
+                    <div>
+                        {% if errors %}
+                        <p style="color: red">{{errors}}</p>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+</div><!--content-->
+{% endblock %}
