@@ -1,16 +1,16 @@
 from django import forms
 from datetime import datetime
-from .models import ImageData, Place, Tag, Category, ImageFiles
+from .models import ImageData, Place, Tag, Category, ImageFile
 
-class LoginForm(forms.Form):
-    username = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}), label="Username", required=True, max_length=50)
-
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}), label="Password", required=True, max_length=50)
-
-    def __init__(self, *args, **kwargs):
-        super(LoginForm, self).__init__(*args, **kwargs)
+# class LoginForm(forms.Form):
+#     username = forms.CharField(
+#         widget=forms.TextInput(attrs={'class': 'form-control'}), label="Username", required=True, max_length=50)
+#
+#     password = forms.CharField(
+#         widget=forms.PasswordInput(attrs={'class': 'form-control'}), label="Password", required=True, max_length=50)
+#
+#     def __init__(self, *args, **kwargs):
+#         super(LoginForm, self).__init__(*args, **kwargs)
 
 
 class EditForm(forms.ModelForm):
@@ -66,5 +66,6 @@ class EditForm(forms.ModelForm):
         super(EditForm, self).__init__(*args, **kwargs)
 
         if self.instance is not None:
-            self.fields['preview'].initial = self.instance.file_name.preview_name
+            self.img_file = self.instance.img_file
+            self.fields['preview'].initial = self.instance.img_file.preview_name
             #self.fields['group'].initial = [(i.group.id, i.group.name) for i in SchoolToUserToGroup.objects.filter(user_id=self.instance.id).all()]

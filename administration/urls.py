@@ -1,4 +1,5 @@
 from django.conf.urls import url, include
+
 from .views import Login, Logout, List, GetNew, Edit
 
 from django.views.decorators.csrf import csrf_exempt

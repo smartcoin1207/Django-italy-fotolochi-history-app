@@ -39,10 +39,10 @@ class Migration(migrations.Migration):
             },
         ),
         migrations.CreateModel(
-            name='ImageFiles',
+            name='ImageFile',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('file_name', models.CharField(max_length=128, null=True)),
+                ('file_name', models.CharField(db_index=True, max_length=128, null=True)),
                 ('original_name', models.CharField(max_length=128, null=True)),
                 ('thumb_name', models.CharField(max_length=128, null=True)),
                 ('preview_name', models.CharField(max_length=128, null=True)),
@@ -52,7 +52,7 @@ class Migration(migrations.Migration):
                 ('is_new', models.BooleanField(default=True)),
             ],
             options={
-                'db_table': 'image_files',
+                'db_table': 'image_file',
             },
         ),
         migrations.CreateModel(
@@ -60,30 +60,30 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('category', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='administration.Category')),
-                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='administration.ImageFiles')),
+                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='administration.ImageFile')),
             ],
             options={
-                'db_table': 'images_to_ categories',
+                'db_table': 'images_to_categories',
             },
         ),
         migrations.CreateModel(
             name='ImageToPlace',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='administration.ImageFiles')),
+                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='administration.ImageFile')),
             ],
             options={
-                'db_table': 'images_to_ places',
+                'db_table': 'images_to_places',
             },
         ),
         migrations.CreateModel(
             name='ImageToTag',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='administration.ImageFiles')),
+                ('image', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='administration.ImageFile')),
             ],
             options={
-                'db_table': 'images_to_ tags',
+                'db_table': 'images_to_tags',
             },
         ),
         migrations.CreateModel(
@@ -119,7 +119,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='imagedata',
-            name='file_name',
-            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='administration.ImageFiles'),
+            name='img_file',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='administration.ImageFile'),
         ),
     ]

@@ -3,8 +3,8 @@ from django.db import models
 # Create your models here.
 
 
-class ImageFiles(models.Model):
-    file_name = models.CharField(null=True, max_length=128)
+class ImageFile(models.Model):
+    file_name = models.CharField(null=True, max_length=128, db_index=True)
     original_name = models.CharField(null=True, max_length=128)
     thumb_name = models.CharField(null=True, max_length=128)
     preview_name = models.CharField(null=True, max_length=128)
@@ -14,11 +14,11 @@ class ImageFiles(models.Model):
     is_new = models.BooleanField(default=True)
 
     class Meta:
-        db_table = 'image_files'
+        db_table = 'image_file'
 
 
 class ImageData(models.Model):
-    file_name = models.ForeignKey(ImageFiles, on_delete=models.CASCADE)
+    img_file = models.ForeignKey(ImageFile, on_delete=models.CASCADE)
     title = models.CharField(null=True, max_length=128)
     short_description = models.CharField(null=True, max_length=128)
     full_description = models.CharField(null=True, max_length=128)
@@ -54,7 +54,7 @@ class Tag(models.Model):
 
 
 class ImageToPlace(models.Model):
-    image = models.ForeignKey(ImageFiles, on_delete=models.CASCADE)
+    image = models.ForeignKey(ImageFile, on_delete=models.CASCADE)
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
 
     class Meta:
@@ -62,7 +62,7 @@ class ImageToPlace(models.Model):
 
 
 class ImageToCategory(models.Model):
-    image = models.ForeignKey(ImageFiles, on_delete=models.CASCADE)
+    image = models.ForeignKey(ImageFile, on_delete=models.CASCADE)
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:
@@ -70,7 +70,7 @@ class ImageToCategory(models.Model):
 
 
 class ImageToTag(models.Model):
-    image = models.ForeignKey(ImageFiles, on_delete=models.CASCADE)
+    image = models.ForeignKey(ImageFile, on_delete=models.CASCADE)
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
     class Meta:

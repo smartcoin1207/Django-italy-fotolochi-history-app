@@ -9,7 +9,7 @@ def check_orientation(file):
     elif size[0] == size[1]:
         orientation = 'square'
     else:
-        orientation = 'portret'
+        orientation = 'vertical'
     return orientation
 
 
