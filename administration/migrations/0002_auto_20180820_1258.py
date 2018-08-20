@@ -14,17 +14,5 @@ class Migration(migrations.Migration):
             model_name='imagedata',
             name='api_id',
             field=models.CharField(blank=True, db_index=True, max_length=255, null=True, unique=True),
-        ),
-        migrations.AlterModelTable(
-            name='imagetocategory',
-            table='images_to_ categories',
-        ),
-        migrations.AlterModelTable(
-            name='imagetoplace',
-            table='images_to_ places',
-        ),
-        migrations.AlterModelTable(
-            name='imagetotag',
-            table='images_to_ tags',
-        ),
+        )
     ]

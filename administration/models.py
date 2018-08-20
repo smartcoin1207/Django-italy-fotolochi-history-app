@@ -59,7 +59,7 @@ class ImageToPlace(models.Model):
     place = models.ForeignKey(Place, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'images_to_ places'
+        db_table = 'images_to_places'
 
 
 class ImageToCategory(models.Model):
@@ -67,7 +67,7 @@ class ImageToCategory(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'images_to_ categories'
+        db_table = 'images_to_categories'
 
 
 class ImageToTag(models.Model):
@@ -75,4 +75,4 @@ class ImageToTag(models.Model):
     tag = models.ForeignKey(Tag, on_delete=models.CASCADE)
 
     class Meta:
-        db_table = 'images_to_ tags'
+        db_table = 'images_to_tags'
