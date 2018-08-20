@@ -42,8 +42,8 @@ class EditForm(forms.ModelForm):
         widget=forms.CheckboxInput(attrs={'class': 'pure-checkbox'}), label="Is Publish", required=False
     )
 
-    places = forms.ChoiceField(
-        widget=forms.Select(), label="Places", required=False
+    place = forms.ChoiceField(
+        widget=forms.Select(), label="Place", required=False
     )
 
     categories = forms.MultipleChoiceField(
@@ -58,7 +58,7 @@ class EditForm(forms.ModelForm):
         model = ImageData
         exclude = []
         fields = ['preview', 'title', 'short_description', 'full_description', 'rating', 'creative', 'is_publish',
-                  'places']
+                  'place', 'tags', 'categories']
 
     def __init__(self, *args, **kwargs):
         super(EditForm, self).__init__(*args, **kwargs)
@@ -66,16 +66,6 @@ class EditForm(forms.ModelForm):
         if self.instance.id is not None:
             self.img_file = self.instance.img_file
             self.fields['preview'].initial = self.instance.img_file.preview_name
-            self.fields['places'].choices = [['', 'Select place']] + self.client.places
+            self.fields['place'].choices = [['', 'Select place']] + self.client.places
             self.fields['tags'].choices = [['', 'Select tag']] + [(i, i) for i in self.client.tags]
             self.fields['categories'].choices = [['', 'Select tag']] + self.client.categories
-            # self.fields['group'].initial = [(i.group.id, i.group.name) for i in SchoolToUserToGroup.objects.filter(user_id=self.instance.id).all()]
-
-    def clean(self):
-        cleaned_data = super(EditForm, self).clean()
-
-    def save(self):
-        instance = super(EditForm, self).save()
-        instance.date_updated = datetime.now()
-        instance.save()
-        return instance

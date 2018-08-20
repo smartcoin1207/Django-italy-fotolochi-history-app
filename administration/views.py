@@ -143,7 +143,6 @@ class Edit(LoginRequiredMixin, UpdateView):
     success_url = reverse_lazy('administration:list')
 
     def form_valid(self, form):
-        import pudb;pudb.set_trace()
         return super(Edit, self).form_valid(form)
 
     # def get(self, request, data_id, *args, **kwargs):
