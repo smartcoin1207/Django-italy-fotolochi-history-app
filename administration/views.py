@@ -16,6 +16,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanen
 from .forms import EditForm
 from .models import ImageData, ImageFile
 from django.views import View
+from django.views.generic import UpdateView
 from os import listdir
 from os.path import isfile, join
 from .helpers import *
@@ -134,25 +135,34 @@ class GetNew(LoginRequiredMixin, View):
         return HttpResponseRedirect(reverse('administration:list'))
 
 
-class Edit(LoginRequiredMixin, View):
+class Edit(LoginRequiredMixin, UpdateView):
 
-    def get(self, request, data_id, *args, **kwargs):
-        image_data = ImageData.objects.get(id=data_id) if int(data_id) else None
-        form = EditForm(instance=image_data, use_required_attribute=False)
-        return render(request, 'administration/edit.html', {'data_id': int(data_id), 'form': form})
+    template_name = 'administration/edit.html'
+    form_class = EditForm
+    queryset = ImageData.objects.select_related('img_file').all()
+    success_url = reverse_lazy('administration:list')
 
-    @csrf_exempt
-    def post(self, request, data_id, *args, **kwargs):
-        image_data = ImageData.objects.get(id=data_id)
-        data = {}
-        for i in json.loads(request.body.decode('utf-8')):
-            data.update({i['name']: i['value']})
+    def form_valid(self, form):
+        import pudb;pudb.set_trace()
+        return super(Edit, self).form_valid(form)
 
-        form = EditForm(instance=image_data, data=data, use_required_attribute=False)
-        if form.is_valid():
-            form.save()
-            return HttpResponseRedirect(reverse('administration:list'))
-        else:
-            return render(request, 'administration/edit.html', {'form': form,
-                                                        'data_id': int(data_id),
-                                                        'errors': dict(form.errors.items())})
+    # def get(self, request, data_id, *args, **kwargs):
+    #     image_data = ImageData.objects.get(id=data_id) if int(data_id) else None
+    #     form = EditForm(instance=image_data, use_required_attribute=False)
+    #     return render(request, 'administration/edit.html', {'data_id': int(data_id), 'form': form})
+    #
+    # @csrf_exempt
+    # def post(self, request, data_id, *args, **kwargs):
+    #     image_data = ImageData.objects.get(id=data_id)
+    #     data = {}
+    #     for i in json.loads(request.body.decode('utf-8')):
+    #         data.update({i['name']: i['value']})
+    #
+    #     form = EditForm(instance=image_data, data=data, use_required_attribute=False)
+    #     if form.is_valid():
+    #         form.save()
+    #         return HttpResponseRedirect(reverse('administration:list'))
+    #     else:
+    #         return render(request, 'administration/edit.html', {'form': form,
+    #                                                     'data_id': int(data_id),
+    #                                                     'errors': dict(form.errors.items())})

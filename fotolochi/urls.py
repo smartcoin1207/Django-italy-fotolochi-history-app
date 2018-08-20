@@ -15,19 +15,17 @@ Including another URLconf
 """
 from django.conf import settings
 from django.conf.urls import url, include
-from django.contrib import admin
+from django.contrib.staticfiles import views
+from django.urls import re_path
 from django.conf.urls.static import static
 
 from django.views.generic.base import RedirectView
-from administration.views import List
+
 
 urlpatterns = [
     #url(r'^admin/', admin.site.urls),
     url(r'^administration/', include('administration.urls')),
 ]
-
-from django.contrib.staticfiles import views
-from django.urls import re_path
 
 if settings.DEBUG:
     urlpatterns += [

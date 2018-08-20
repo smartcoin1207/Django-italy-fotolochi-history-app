@@ -1,10 +1,12 @@
 $(function() {
-  $('.ui.checkbox').checkbox();
-  $('.ui.dropdown,.ui.dropdown.-type-arrow').dropdown();
-  renderDataTable();
-  validateForm();
-  objFit();
-  typePhoto();
+//  $('.ui.checkbox').checkbox();
+//  $('.ui.dropdown,.ui.dropdown.-type-arrow').dropdown();
+//  renderDataTable();
+//  validateForm();
+//  objFit();
+//  typePhoto();
+  $('#id_tags').selectize();
+  $('#id_categories').selectize();
 });
 
 function typePhoto(){
