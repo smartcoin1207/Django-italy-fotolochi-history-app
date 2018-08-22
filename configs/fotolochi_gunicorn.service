@@ -1,0 +1,12 @@
+[Unit]
+Description=gunicorn daemon
+After=network.target
+
+[Service]
+User=pmuser
+Group=www-data
+WorkingDirectory=/home/pmuser/fotolochi
+ExecStart=/home/pmuser/fotolochi/fotolochi-venv/bin/gunicorn --error-logfile /home/pmuser/fotolochi/server_logs/gunicorn/error_log, --log-file /home/pmuser/fotolochi/server_logs/gunicorn/log --access-logfile /home/pmuser/fotolochi/server_logs/gunicorn/access_log  --capture-output  --workers 3 --bind unix:/home/pmuser/fotolochi/fotolochi.sock fotolochi.wsgi:application
+
+[Install]
+WantedBy=multi-user.target

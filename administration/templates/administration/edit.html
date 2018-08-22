@@ -16,14 +16,6 @@
 <link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.min.css'>
 {% endblock %}
 
-{% block post_js %}
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-<!--<script src="https://cdn.datatables.net/1.10.16/js/dataTables.semanticui.min.js"></script>-->
-<!--<script src="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"></script>-->
-<!--<script src="{% static "js/semantic.min.js"%}"></script>-->
-<script defer src="{% static 'js/main.js' %}"></script>
-{% endblock %}
-
 {% block main %}
 <div class="columns">
   <div class="column">
@@ -52,7 +44,7 @@
         <div class="field">
           <label class="label">Descrizione</label>
           <div class="control">
-            <textarea class="textarea" name="description" placeholder="Descrizione" rows="5"></textarea>
+            <textarea class="textarea" name="full_description" placeholder="Descrizione" rows="5"></textarea>
           </div>
         </div>
 
@@ -61,33 +53,30 @@
                 <label class="label">Date</label>
              </div>
              <p class="control">
-                 <input class="input" type="text" name="day" placeholder="dd" />
+                 {{ form.day }}
              </p>
              <p class="control">
-                 <input class="input" type="text" name="month" placeholder="mm" />
+                 {{ form.month }}
              </p>
              <p class="control">
-                <input class="input" type="text" name="year" placeholder="aaaa" />
+                 {{ form.year }}
              </p>
          </div>
-         <!--<div class="field column two wide mr-10">-->
-                      <!--<label>Data</label>-->
-                      <!--<input placeholder="gg" maxlength="2" name="day" type="text">-->
-                    <!--</div>-->
 
-                    <!--<div class="field column two wide mr-10">-->
-                      <!--<input placeholder="mm" maxlength="2" name="month" type="text">-->
-                    <!--</div>-->
-
-                    <!--&lt;!&ndash;div class="field column two wide">-->
-                      <!--<input placeholder="Year" maxlength="4" name="year" type="text">-->
-                    <!--</div&ndash;&gt;-->
-
-                    <!--<div class="field column three wide">-->
-                      <!--<label>Anno</label>-->
-                      <!--<input placeholder="Anno" maxlength="4" name="anno" type="text">-->
-                    <!--</div>-->
-
+        <div class="field has-addons">
+            <div class="field-label">
+                <label class="label">Year</label>
+             </div>
+            <p class="control">
+                {{ form.decennary_year }}
+            </p>
+            <div class="field-label">
+                <label class="label">Decade</label>
+             </div>
+            <p class="control">
+                {{ form.is_decennary }}
+            </p>
+        </div>
 
         <div class="field">
             <div class="control">
@@ -101,15 +90,50 @@
         <div class="field">
             <label class="label">Categorie</label>
             <p class="control">
-                    {{ form.categories }}
+                {{ form.categories }}
             </p>
         </div>
 
         <div class="field">
             <label class="label">Tags</label>
             <p class="control">
-                    {{ form.tags }}
+                {{ form.tags }}
             </p>
+        </div>
+
+        <div class="field">
+          <label class="label">Rating immagine</label>
+          <div class="control">
+            {{ form.rating }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Creative</label>
+          <div class="control">
+            {{ form.creative }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Is publish</label>
+          <div class="control">
+            {{ form.is_publish }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Stato Prodotto</label>
+          <div class="control">
+            {{ form.status }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Utenza</label>
+          <div class="control">
+            {{ form.scope }}
+          </div>
         </div>
 
         <div class="field is-grouped">

@@ -142,9 +142,6 @@ class Edit(LoginRequiredMixin, UpdateView):
     queryset = ImageData.objects.select_related('img_file').all()
     success_url = reverse_lazy('administration:list')
 
-    def form_valid(self, form):
-        return super(Edit, self).form_valid(form)
-
     # def get(self, request, data_id, *args, **kwargs):
     #     image_data = ImageData.objects.get(id=data_id) if int(data_id) else None
     #     form = EditForm(instance=image_data, use_required_attribute=False)
