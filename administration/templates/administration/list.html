@@ -64,31 +64,38 @@
 {% endblock %}
 
 {% block pagination %}
-    <nav class="pagination" role="navigation" aria-label="pagination">
-      <a class="pagination-previous">Previous</a>
-      <a class="pagination-next">Next page</a>
-      <ul class="pagination-list">
-        <li>
-          <a class="pagination-link" aria-label="Goto page 1">1</a>
-        </li>
-        <li>
-          <span class="pagination-ellipsis">&hellip;</span>
-        </li>
-        <li>
-          <a class="pagination-link" aria-label="Goto page 45">45</a>
-        </li>
-        <li>
-          <a class="pagination-link is-current" aria-label="Page 46" aria-current="page">46</a>
-        </li>
-        <li>
-          <a class="pagination-link" aria-label="Goto page 47">47</a>
-        </li>
-        <li>
-          <span class="pagination-ellipsis">&hellip;</span>
-        </li>
-        <li>
-          <a class="pagination-link" aria-label="Goto page 86">86</a>
-        </li>
-      </ul>
-    </nav>
+    {% if is_paginated %}
+        <nav class="pagination" role="navigation" aria-label="pagination">
+          <!--<a class="pagination-previous">Previous</a>-->
+          <!--<a class="pagination-next">Next page</a>-->
+          <ul class="pagination-list">
+            {% if page_obj.has_previous %}
+              <li>
+                <a href="?page={{ page_obj.previous_page_number }}" class="pagination-link" aria-label="Goto page {{ page_obj.previous_page_number }}">{{ page_obj.previous_page_number }}</a>
+              </li>
+            {% endif %}
+
+            <!--<li>-->
+              <!--<span class="pagination-ellipsis">&hellip;</span>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<a class="pagination-link" aria-label="Goto page 45">45</a>-->
+            <!--</li>-->
+            <li>
+              <a class="pagination-link is-current" aria-label="Page {{ page_obj.number }}" aria-current="page">{{ page_obj.number }}</a>
+            </li>
+            <!--<li>-->
+              <!--<a class="pagination-link" aria-label="Goto page 47">47</a>-->
+            <!--</li>-->
+            <!--<li>-->
+              <!--<span class="pagination-ellipsis">&hellip;</span>-->
+            <!--</li>-->
+            {% if page_obj.has_next %}
+                <li>
+                  <a href="?page={{ page_obj.next_page_number }}" class="pagination-link" aria-label="Goto page {{ page_obj.next_page_number }}">{{ page_obj.next_page_number }}</a>
+                </li>
+            {% endif %}
+          </ul>
+        </nav>
+    {% endif %}
 {% endblock %}

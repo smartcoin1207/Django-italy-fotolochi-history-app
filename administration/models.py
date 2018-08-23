@@ -1,3 +1,5 @@
+from separatedvaluesfield.models import SeparatedValuesField
+
 from django.db import models
 
 
@@ -24,13 +26,29 @@ class Tag(models.Model):
 
 
 class ImageFile(models.Model):
+    HORIZONTAL = 1
+    VERTICAL = 2
+    SQUARE = 3
+    PANORAMIC = 4
+    ORIENTATION_CHOICES = [
+        (HORIZONTAL, 'Horizontal'),
+        (VERTICAL, 'Vertical'),
+        (SQUARE, 'Square'),
+        (PANORAMIC, 'Panoramic')
+    ]
+    BW = 'B/N'
+    COLOR = 'C'
+    COLOR_CHOICES = [
+        (BW, 'B/N'),
+        (COLOR, 'Color')
+    ]
     file_name = models.CharField(null=True, max_length=128, db_index=True)
     original_name = models.CharField(null=True, max_length=128)
     thumb_name = models.CharField(null=True, max_length=128)
     preview_name = models.CharField(null=True, max_length=128)
     added_date = models.DateTimeField(auto_now_add=True)
-    is_color = models.BooleanField(default=True)
-    orientation = models.CharField(null=True, max_length=128)
+    color = models.CharField(default=True, max_length=10, choices=COLOR_CHOICES)
+    orientation = models.IntegerField(null=True, blank=True, choices=ORIENTATION_CHOICES)
     is_new = models.BooleanField(default=True)
 
     class Meta:
@@ -66,8 +84,8 @@ class ImageData(models.Model):
     rating = models.IntegerField(null=True)
     creative = models.BooleanField(default=False)
     is_publish = models.BooleanField(default=False)
-    tags = models.TextField(null=True, blank=True)
-    categories = models.TextField(null=True, blank=True)
+    tags = SeparatedValuesField(max_length=255, null=True, blank=True)
+    categories = SeparatedValuesField(max_length=255, null=True, blank=True)
     place = models.TextField(null=True, blank=True)
     archive = models.CharField(max_length=255, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)

@@ -16,7 +16,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanen
 from .forms import EditForm
 from .models import ImageData, ImageFile
 from django.views import View
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, ListView
 from os import listdir
 from os.path import isfile, join
 from .helpers import *
@@ -68,12 +68,17 @@ class Logout(auth_views.LogoutView):
 
 
 
-class List(LoginRequiredMixin, View):
+class List(LoginRequiredMixin, ListView):
 
-    def get(self, request, *args, **kwargs):
-        images_list = [i for i in ImageData.objects.all()]
-        msg = request.session.pop('msg', '')
-        return render(request, 'administration/list.html', {'list': images_list, 'msg': msg})
+    model = ImageData
+    template_name = 'administration/list.html'
+    context_object_name = 'list'
+    paginate_by = 5
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        ctx = super(List, self).get_context_data(object_list=object_list, **kwargs)
+        ctx['msg'] = self.request.session.pop('msg', '')
+        return ctx
 
 
 class GetNew(LoginRequiredMixin, View):

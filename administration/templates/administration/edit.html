@@ -28,6 +28,20 @@
     <form class="control" action="." method="post">
         {% csrf_token %}
         <div class="field">
+          <label class="label">Colore</label>
+          <div class="control">
+            {{ form.color }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Orientation</label>
+          <div class="control">
+            {{ form.orientation }}
+          </div>
+        </div>
+
+        <div class="field">
           <label class="label">Titolo immagine</label>
           <div class="control">
             {{ form.title }}
@@ -44,7 +58,14 @@
         <div class="field">
           <label class="label">Descrizione</label>
           <div class="control">
-            <textarea class="textarea" name="full_description" placeholder="Descrizione" rows="5"></textarea>
+            {{ form.full_description }}
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Note</label>
+          <div class="control">
+            {{ form.notes }}
           </div>
         </div>
 
@@ -109,6 +130,15 @@
         </div>
 
         <div class="field">
+            <div class="control">
+                <label class="label">Archivio</label>
+                <div class="select">
+                    {{ form.archive }}
+                </div>
+            </div>
+        </div>
+
+        <div class="field">
           <label class="label">Creative</label>
           <div class="control">
             {{ form.creative }}
@@ -119,13 +149,6 @@
           <label class="label">Is publish</label>
           <div class="control">
             {{ form.is_publish }}
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Stato Prodotto</label>
-          <div class="control">
-            {{ form.status }}
           </div>
         </div>
 
@@ -147,176 +170,4 @@
     </form>
   </div>
 </div>
-
-<!--<div class="l-wrapper">-->
-    <!--<main class="b-content">-->
-        <!--<div class="b-content__img">-->
-
-          <!--<div class="b-loader -type-vertical">-->
-            <!--<p class="b-loader__title"><span>File:</span>1982_L13A-30.jpg</p>-->
-            <!--<img src="/media/{{ form.preview.value }}" alt="current img">-->
-              <!--<div class="b-loader__nav">-->
-              <!--<span class="btn-vertical photo-btn {% if form.img_file.orientation == 'vertical' %}isActive{% endif %}">{% if form.img_file.orientation == 'vertical' %}{% if form.img_file.is_color %}C{% else %}B/N{% endif %}{% endif %}</span>-->
-              <!--<div class="b-loader__navItem -type-right">-->
-                <!--<span class="btn-square photo-btn {% if form.img_file.orientation == 'square' %}isActive{% endif %}">{% if form.img_file.orientation == 'square' %}{% if form.img_file.is_color %}C{% else %}B/N{% endif %}{% endif %}</span>-->
-                <!--<span class="btn-horizontal photo-btn {% if form.img_file.orientation == 'landscape' %}isActive{% endif %}">{% if form.img_file.orientation == 'landscape'%}{% if form.img_file.is_color %}C{% else %}B/N{% endif %}{% endif %}</span>-->
-              <!--</div>-->
-            <!--</div>-->
-          <!--</div>-->
-
-        <!--</div>-->
-        <!--<div class="b-content__form">-->
-          <!--<h3 class="b-content__formTitle">Asset manager</h3>-->
-          <!--<form class="ui form" method="post" action=".">-->
-
-            <!--<div class="field eleven wide">-->
-              <!--<label>Luogo</label>-->
-              <!--<div class="field ui labeled icon dropdown -type-img">-->
-                <!--<input type="hidden" name="luogo">-->
-                <!--<div class="text">Firenze</div>-->
-                <!--<div class="menu">-->
-                  <!--<div class="item">-->
-                    <!--1-->
-                  <!--</div>-->
-                  <!--<div class="item">-->
-                    <!--2-->
-                  <!--</div>-->
-                  <!--<div class="item">-->
-                    <!--3-->
-                  <!--</div>-->
-                <!--</div>-->
-                <!--<i class="fa fa-pencil" aria-hidden="true"></i>-->
-              <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="b-category">-->
-
-              <!--<div class="field">-->
-                <!--<label>Categorie</label>-->
-                <!--<div class="field ui labeled icon dropdown search -type-img multiple selection">-->
-                  <!--<input type="hidden" name="Categorie">-->
-                  <!--<div class="default text">Gran Premio Montecarlo F1</div>-->
-                  <!--<div class="menu">-->
-                    <!--<div class="item" data-value="1">Gran Premio Montecarlo F1</div>-->
-                    <!--<div class="item" data-value="2">Automobilismo</div>-->
-                  <!--</div>-->
-                  <!--<i class="fa fa-pencil" aria-hidden="true"></i>-->
-                <!--</div>-->
-              <!--</div>-->
-
-              <!--<div class="field b-tags">-->
-                <!--<p class="tags-title">Tag</p>-->
-                <!--<div class="ui multiple dropdown">-->
-                  <!--<input type="hidden" name="tags">-->
-                  <!--<span class="text">Aggiungi tag</span>-->
-                  <!--<div class="menu">-->
-                    <!--<div class="scrolling menu">-->
-                      <!--<div class="item" data-value="Sport">-->
-                        <!--<div class="tag">-->
-                          <!--<span>Sport</span>-->
-                          <!--<i class="fa fa-star-o" data-value="0" aria-hidden="true"></i>-->
-                          <!--&lt;!&ndash;<i class="fa fa-star-half-o" data-value="0" aria-hidden="true"></i>&ndash;&gt;-->
-                        <!--</div>-->
-                      <!--</div>-->
-                      <!--<div class="item" data-value="Calcio">-->
-                        <!--<div class="tag">-->
-                          <!--<span>Calcio</span>-->
-                          <!--<i class="fa fa-star-o" data-value="0" aria-hidden="true"></i>-->
-                        <!--</div>-->
-                      <!--</div>-->
-                      <!--<div class="item" data-value="Cultura">-->
-                        <!--<div class="tag">-->
-                          <!--<span>Cultura</span>-->
-                          <!--<i class="fa fa-star-o" data-value="0" aria-hidden="true"></i>-->
-                        <!--</div>-->
-                      <!--</div>-->
-                    <!--</div>-->
-                  <!--</div>-->
-                <!--</div>-->
-              <!--</div>-->
-
-              <!--<div class="inline field b-rating">-->
-                  <!--<div class="ui radio checkbox">-->
-                    <!--<input type="radio" name="rating">-->
-                    <!--<label>1</label>-->
-                  <!--</div>-->
-
-                  <!--<div class="ui radio checkbox">-->
-                    <!--<input type="radio" name="rating" value="rating">-->
-                    <!--<label>2</label>-->
-                  <!--</div>-->
-
-                  <!--<div class="ui radio checkbox">-->
-                    <!--<input type="radio" name="rating" value="rating">-->
-                    <!--<label>3</label>-->
-                  <!--</div>-->
-
-                  <!--<div class="ui radio checkbox">-->
-                    <!--<input type="radio" name="rating" value="rating">-->
-                    <!--<label>4</label>-->
-                  <!--</div>-->
-
-                  <!--<div class="ui radio checkbox">-->
-                    <!--<input type="radio" name="rating" value="rating">-->
-                    <!--<label>5</label>-->
-                  <!--</div>-->
-              <!--</div>-->
-
-            <!--</div>-->
-
-            <!--<div class="field seven wide mb-40">-->
-              <!--<p>Archivio</p>-->
-              <!--<div class="field ui labeled icon dropdown -type-arrow">-->
-                <!--<input type="hidden" name="locchi">-->
-                <!--<div class="text">Foto Locchi</div>-->
-                <!--<div class="menu">-->
-                  <!--<div class="item">-->
-                    <!--1-->
-                  <!--</div>-->
-                  <!--<div class="item">-->
-                    <!--2-->
-                  <!--</div>-->
-                  <!--<div class="item">-->
-                    <!--3-->
-                  <!--</div>-->
-                <!--</div>-->
-                <!--<i class="fa fa-caret-down" aria-hidden="true"></i>-->
-              <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="inline field mb-40">-->
-              <!--<div class="ui checkbox">-->
-                <!--<input type="checkbox" name="creative" id="creative" value="creative">-->
-                <!--<label for="creative">Creative</label>-->
-              <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="inline fields">-->
-              <!--<div class="field mb-40">-->
-                <!--<div class="ui radio checkbox">-->
-                  <!--<input type="radio" name="frequency" id="editoriale"  checked="checked">-->
-                  <!--<label for="editoriale">Solo editoriale</label>-->
-                <!--</div>-->
-              <!--</div>-->
-
-              <!--<div class="field mb-40">-->
-                <!--<div class="ui radio checkbox">-->
-                  <!--<input type="radio" name="frequency" id="stampa">-->
-                  <!--<label for="stampa">Editoriale e stampa</label>-->
-                <!--</div>-->
-              <!--</div>-->
-            <!--</div>-->
-            <!--<div class="inline field mb-40">-->
-              <!--<div class=" ui checkbox">-->
-                <!--<input type="checkbox" name="immagine" id="immagine">-->
-                <!--<label for="immagine">Pubblica immagine</label>-->
-              <!--</div>-->
-            <!--</div>-->
-
-            <!--<div class="ui black submit button">Aggiungi immagine</div>-->
-          <!--</form>-->
-        <!--</div>-->
-      <!--</main>-->
-<!--</div>-->
-<!--</div>-->
 {% endblock %}

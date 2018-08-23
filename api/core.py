@@ -27,7 +27,7 @@ class APIClient:
             "op": op,
             "payload": data or {}
         }
-        resp = requests.post(self.srv, data={"data": json.dumps(payload)})
+        resp = requests.post(self.srv, data={"data": payload})
         if resp.status_code > 399:
             raise Exception(resp.content)
         # TODO: work out with NO DATA response with 200 OK
@@ -52,16 +52,22 @@ class APIClient:
             'Descrizione1': data.get('short_description', ''),
             'Descrizione2': data.get('full_description', ''),
             'Archivio': data.get('archive', 'Pic'),
-            'Utenza': data.get('scope', ''),
-            'Creative': data.get('creative'),
-            'Rating': data.get('rating', 0),
-            'StatoProdotto': data.get('status', ''),
-            'Note': data.get('notes', '')
+            'Utenza': '1' if data.get('scope', '') else '0',
+            'Creative': 'S' if data.get('creative') else 'N',
+            'Rating': str(data.get('rating', 0)),
+            'StatoProdotto': data.get('status'),
+            'Note': data.get('notes', ''),
+            # TODO: Add real values
+            'Supporto': '6x6',
+            'Orientamento': data.get('orientation', '1'),
+            'Colore': data.get('color', 'B/N')
         }
         if data.get('year') and data.get('month') and data.get('day'):
             payload.update({
                 'Data': '{:04}-{:02}-{:02}'.format(data['year'], data['month'], data['day'])
             })
+        if data.get('year') and data.get('is_decennary'):
+            payload.update({'Anno': '{}'.format(data['year'])})
         if data.get('place'):
             payload.update({
                 'Luogo': data['place']

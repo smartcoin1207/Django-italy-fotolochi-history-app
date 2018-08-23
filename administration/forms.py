@@ -1,6 +1,6 @@
 from django import forms
 
-from .models import ImageData
+from .models import ImageData, ImageFile
 from api.core import APIClient
 
 
@@ -69,19 +69,24 @@ class EditForm(forms.ModelForm):
         widget=forms.Select(), label="Archivio", required=False
     )
 
-    status = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=ImageData.PRODUCT_STATUS, label="Stato Prodotto", required=False
-    )
-
     scope = forms.ChoiceField(
         widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=ImageData.SCOPE, label="Utenza", required=False
+    )
+
+    color = forms.ChoiceField(
+        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=ImageFile.COLOR_CHOICES, label='Colore', required=False
+    )
+
+    orientation = forms.ChoiceField(
+        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=ImageFile.ORIENTATION_CHOICES, label='Orientation', required=False
     )
 
     class Meta:
         model = ImageData
         exclude = []
         fields = ['preview', 'title', 'short_description', 'full_description', 'rating', 'creative', 'is_publish',
-                  'place', 'tags', 'categories', 'archive']
+                  'place', 'tags', 'categories', 'archive', 'notes', 'day', 'month', 'year', 'decennary_year',
+                  'is_decennary', 'scope', 'orientation', 'color']
 
     def __init__(self, *args, **kwargs):
         super(EditForm, self).__init__(*args, **kwargs)
@@ -91,16 +96,29 @@ class EditForm(forms.ModelForm):
             self.fields['preview'].initial = self.instance.img_file.preview_name
             self.fields['place'].choices = [['', 'Select place']] + self.client.places
             self.fields['tags'].choices = [['', 'Select tag']] + [(i, i) for i in self.client.tags]
-            self.fields['categories'].choices = [['', 'Select tag']] + self.client.categories
+            self.fields['categories'].choices = [['', 'Select category']] + self.client.categories
             self.fields['archive'].choices = [['', 'Select archive']] + self.client.archives
 
+    def clean(self):
+        super(EditForm, self).clean()
+        self.cleaned_data['status'] = ImageData.PRODUCT_STATUS_PUBLISHED \
+            if self.cleaned_data['is_publish'] else ImageData.PRODUCT_STATUS_NOT_PUBLISHED
+
     def save(self, commit=True):
-        instance = super(EditForm, self).save(commit=commit)
+        super(EditForm, self).save(commit=commit)
         self.cleaned_data.update({
             'file_name': self.img_file.file_name
         })
-        resp = self.client.update_visor(instance.api_id, **self.cleaned_data)
-        import pudb;pudb.set_trace()
-        instance.api_id = resp['_key']
-        instance.save()
-        return instance
+        try:
+            resp = self.client.update_visor(self.instance.api_id, **self.cleaned_data)
+        except:
+            # TODO: add message to request about 500 error
+            pass
+        else:
+            self.instance.api_id = resp['_key']
+            self.instance.save()
+        self.instance.img_file.color = self.cleaned_data['color']
+        self.instance.img_file.orientation = self.cleaned_data['orientation']
+        self.instance.img_file.save()
+
+        return self.instance

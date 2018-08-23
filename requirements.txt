@@ -6,3 +6,4 @@ Pygments==2.2.0
 pytz==2018.5
 requests==2.19.1
 django-webpack-loader==0.6.0
+django-separatedvaluesfield==0.6.0
