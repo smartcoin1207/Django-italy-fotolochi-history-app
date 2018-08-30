@@ -27,7 +27,7 @@ class APIClient:
             "op": op,
             "payload": data or {}
         }
-        resp = requests.post(self.srv, data={"data": payload})
+        resp = requests.post(self.srv, data={"data": json.dumps(payload)})
         if resp.status_code > 399:
             raise Exception(resp.content)
         # TODO: work out with NO DATA response with 200 OK

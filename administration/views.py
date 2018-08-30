@@ -88,7 +88,7 @@ class GetNew(LoginRequiredMixin, View):
         from fotolochi import settings
 
         dir = settings.MEDIA_ROOT
-        original_tmp_dir = dir + 'original_tmp/'
+        original_tmp_dir = dir + settings.FTP_ROOT
         original_dir = dir + 'original/'
         thumb_dir = dir + 'thumb/'
         preview_dir = dir + 'preview/'
