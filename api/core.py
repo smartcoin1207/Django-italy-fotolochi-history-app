@@ -30,7 +30,8 @@ class APIClient:
         resp = requests.post(self.srv, data={"data": json.dumps(payload)})
         if resp.status_code > 399:
             raise Exception(resp.content)
-        # TODO: work out with NO DATA response with 200 OK
+        if resp.json() in ['NO FILE', 'NO DATA']:
+            return None
         return resp.json()
 
     def _cache(self, item, func):
@@ -92,3 +93,6 @@ class APIClient:
         if not key:
             op = "in_v"
         return self._make_request(op, data=self._prepare_form_data(**data))
+
+    def get_file(self, filename):
+        return self._make_request('vk_v', data={'File': filename})

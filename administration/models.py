@@ -2,6 +2,8 @@ from separatedvaluesfield.models import SeparatedValuesField
 
 from django.db import models
 
+from .helpers import ORIENTATION_CHOICES, COLOR_CHOICES
+
 
 class Place(models.Model):
     name = models.CharField(null=True, max_length=128)
@@ -26,28 +28,13 @@ class Tag(models.Model):
 
 
 class ImageFile(models.Model):
-    HORIZONTAL = 1
-    VERTICAL = 2
-    SQUARE = 3
-    PANORAMIC = 4
-    ORIENTATION_CHOICES = [
-        (HORIZONTAL, 'Horizontal'),
-        (VERTICAL, 'Vertical'),
-        (SQUARE, 'Square'),
-        (PANORAMIC, 'Panoramic')
-    ]
-    BW = 'B/N'
-    COLOR = 'C'
-    COLOR_CHOICES = [
-        (BW, 'B/N'),
-        (COLOR, 'Color')
-    ]
+
     file_name = models.CharField(null=True, max_length=128, db_index=True)
     original_name = models.CharField(null=True, max_length=128)
     thumb_name = models.CharField(null=True, max_length=128)
     preview_name = models.CharField(null=True, max_length=128)
     added_date = models.DateTimeField(auto_now_add=True)
-    color = models.CharField(default=True, max_length=10, choices=COLOR_CHOICES)
+    color = models.CharField(max_length=10, null=True, blank=True, choices=COLOR_CHOICES)
     orientation = models.IntegerField(null=True, blank=True, choices=ORIENTATION_CHOICES)
     is_new = models.BooleanField(default=True)
 

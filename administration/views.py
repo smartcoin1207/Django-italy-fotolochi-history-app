@@ -86,19 +86,21 @@ class GetNew(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
 
         from fotolochi import settings
-
+        from api.core import APIClient
+        client = APIClient()
         dir = settings.MEDIA_ROOT
-        original_tmp_dir = dir + settings.FTP_ROOT
+        original_tmp_dir = settings.FTP_ROOT
         original_dir = dir + 'original/'
         thumb_dir = dir + 'thumb/'
         preview_dir = dir + 'preview/'
         files = [f for f in listdir(original_tmp_dir) if isfile(join(original_tmp_dir, f))]
-        # And what to do if the same file was uploaded under another name?
-        files_in_db = ImageFile.objects.filter(file_name__in=files).values_list('file_name', flat=True)
+
+        # files_in_db = ImageFile.objects.filter(file_name__in=files).values_list('file_name', flat=True)
         if files:
             # TODO: move to Celery tasks
             for file in files:
-                if file not in files_in_db:
+                file_info = client.get_file(os.path.basename(file))
+                if not file_info:
 
                     orientation = check_orientation(original_tmp_dir + file)
                     color = detect_color_image(file=original_tmp_dir + file)
@@ -125,7 +127,7 @@ class GetNew(LoginRequiredMixin, View):
                                     thumb_name='thumb/' + ext_thumb,
                                     preview_name='preview/' + ext_prev,
                                     is_new=True,
-                                    is_color=color,
+                                    color=color,
                                     orientation=orientation)
 
                     img.save()

@@ -1,6 +1,7 @@
 from django import forms
 
 from .models import ImageData, ImageFile
+from .helpers import COLOR_CHOICES, ORIENTATION_CHOICES
 from api.core import APIClient
 
 
@@ -74,11 +75,11 @@ class EditForm(forms.ModelForm):
     )
 
     color = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=ImageFile.COLOR_CHOICES, label='Colore', required=False
+        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=COLOR_CHOICES, label='Colore', required=False
     )
 
     orientation = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=ImageFile.ORIENTATION_CHOICES, label='Orientation', required=False
+        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=ORIENTATION_CHOICES, label='Orientation', required=False
     )
 
     class Meta:
@@ -98,6 +99,8 @@ class EditForm(forms.ModelForm):
             self.fields['tags'].choices = [['', 'Select tag']] + [(i, i) for i in self.client.tags]
             self.fields['categories'].choices = [['', 'Select category']] + self.client.categories
             self.fields['archive'].choices = [['', 'Select archive']] + self.client.archives
+            self.fields['color'].initial = self.instance.img_file.color
+            self.fields['orientation'].initial = self.instance.img_file.orientation
 
     def clean(self):
         super(EditForm, self).clean()

@@ -1,15 +1,36 @@
 from PIL import Image, ImageStat
 
+HORIZONTAL = 1
+VERTICAL = 2
+SQUARE = 3
+PANORAMIC = 4
+ORIENTATION_CHOICES = [
+    (HORIZONTAL, 'Horizontal'),
+    (VERTICAL, 'Vertical'),
+    (SQUARE, 'Square'),
+    (PANORAMIC, 'Panoramic')
+]
+ORIENTATIONS = dict(ORIENTATION_CHOICES)
+
+
+BW = 'B/N'
+COLOR = 'C'
+COLOR_CHOICES = [
+    (BW, 'B/N'),
+    (COLOR, 'Color')
+]
+COLORS = dict(COLOR_CHOICES)
+
 
 def check_orientation(file):
     image = Image.open(file)
     size = image.size
     if size[0] > size[1]:
-        orientation = 'landscape'
+        orientation = HORIZONTAL
     elif size[0] == size[1]:
-        orientation = 'square'
+        orientation = SQUARE
     else:
-        orientation = 'vertical'
+        orientation = VERTICAL
     return orientation
 
 
@@ -93,16 +114,16 @@ def detect_color_image(file, thumb_size=40, MSE_cutoff=22, adjust_color_bias=Tru
         MSE = float(SSE)/(thumb_size*thumb_size)
         if MSE <= MSE_cutoff:
             #print("grayscale\t")
-            color = False
+            color = BW
         else:
             # print("Color\t\t\t")
-            color = True
+            color = COLOR
     elif len(bands) == 1:
         #print("Black and white")
-        color = False
+        color = BW
     else:
         print("Don't know...")
-
+        color = None
     return color
 
 
