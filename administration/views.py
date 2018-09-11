@@ -16,7 +16,7 @@ from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanen
 from .forms import EditForm
 from .models import ImageData, ImageFile
 from django.views import View
-from django.views.generic import UpdateView, ListView
+from django.views.generic import UpdateView, ListView, DeleteView
 from os import listdir
 from os.path import isfile, join
 from .helpers import *
@@ -73,6 +73,7 @@ class List(LoginRequiredMixin, ListView):
     model = ImageData
     template_name = 'administration/list.html'
     context_object_name = 'list'
+    ordering = ('-date_updated')
     paginate_by = 5
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -149,23 +150,19 @@ class Edit(LoginRequiredMixin, UpdateView):
     queryset = ImageData.objects.select_related('img_file').all()
     success_url = reverse_lazy('administration:list')
 
-    # def get(self, request, data_id, *args, **kwargs):
-    #     image_data = ImageData.objects.get(id=data_id) if int(data_id) else None
-    #     form = EditForm(instance=image_data, use_required_attribute=False)
-    #     return render(request, 'administration/edit.html', {'data_id': int(data_id), 'form': form})
-    #
-    # @csrf_exempt
-    # def post(self, request, data_id, *args, **kwargs):
-    #     image_data = ImageData.objects.get(id=data_id)
-    #     data = {}
-    #     for i in json.loads(request.body.decode('utf-8')):
-    #         data.update({i['name']: i['value']})
-    #
-    #     form = EditForm(instance=image_data, data=data, use_required_attribute=False)
-    #     if form.is_valid():
-    #         form.save()
-    #         return HttpResponseRedirect(reverse('administration:list'))
-    #     else:
-    #         return render(request, 'administration/edit.html', {'form': form,
-    #                                                     'data_id': int(data_id),
-    #                                                     'errors': dict(form.errors.items())})
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs.update({'request': self.request})
+        return kwargs
+
+
+class Delete(LoginRequiredMixin, DeleteView):
+    success_url = reverse_lazy('administration:list')
+    queryset = ImageData.objects.select_related('img_file').all()
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        success_url = self.get_success_url()
+
+        self.object.delete()
+        return HttpResponseRedirect(success_url)

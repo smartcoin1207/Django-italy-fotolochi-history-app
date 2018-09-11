@@ -1,8 +1,8 @@
 from django import forms
 
 from .models import ImageData, ImageFile
-from .helpers import COLOR_CHOICES, ORIENTATION_CHOICES
-from api.core import APIClient
+from .helpers import COLOR_CHOICES, ORIENTATION_CHOICES, SUPPORT_CHOICES
+from api.core import APIClient, APIUpdateError
 
 
 class EditForm(forms.ModelForm):
@@ -34,12 +34,12 @@ class EditForm(forms.ModelForm):
         widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'aaaa'}), label="Year", required=False
     )
 
-    decennary_year = forms.IntegerField(
-        widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'aaaa'}), label="Year", required=False
-    )
-
     is_decennary = forms.BooleanField(
         widget=forms.CheckboxInput(attrs={'class': 'checkbox'}), label="Decade", required=False
+    )
+
+    support = forms.ChoiceField(
+        widget=forms.Select(), label="Archivio", required=False, choices=SUPPORT_CHOICES
     )
 
     rating = forms.IntegerField(
@@ -55,7 +55,7 @@ class EditForm(forms.ModelForm):
     )
 
     place = forms.ChoiceField(
-        widget=forms.Select(), label="Place", required=False
+        widget=forms.Select(attrs={}), label="Place", required=False
     )
 
     categories = forms.MultipleChoiceField(
@@ -86,10 +86,11 @@ class EditForm(forms.ModelForm):
         model = ImageData
         exclude = []
         fields = ['preview', 'title', 'short_description', 'full_description', 'rating', 'creative', 'is_publish',
-                  'place', 'tags', 'categories', 'archive', 'notes', 'day', 'month', 'year', 'decennary_year',
-                  'is_decennary', 'scope', 'orientation', 'color']
+                  'place', 'tags', 'categories', 'archive', 'notes', 'day', 'month', 'year', 'is_decennary',
+                  'scope', 'orientation', 'color', 'support']
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super(EditForm, self).__init__(*args, **kwargs)
         self.client = APIClient()
         if self.instance is not None:
@@ -114,9 +115,8 @@ class EditForm(forms.ModelForm):
         })
         try:
             resp = self.client.update_visor(self.instance.api_id, **self.cleaned_data)
-        except:
-            # TODO: add message to request about 500 error
-            pass
+        except APIUpdateError as e:
+            self.request.session['msg'] = str(e)
         else:
             self.instance.api_id = resp['_key']
             self.instance.save()

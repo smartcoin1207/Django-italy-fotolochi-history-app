@@ -2,7 +2,7 @@ from separatedvaluesfield.models import SeparatedValuesField
 
 from django.db import models
 
-from .helpers import ORIENTATION_CHOICES, COLOR_CHOICES
+from .helpers import ORIENTATION_CHOICES, COLOR_CHOICES, SUPPORT_CHOICES
 
 
 class Place(models.Model):
@@ -66,7 +66,6 @@ class ImageData(models.Model):
     day = models.IntegerField(null=True, blank=True)
     month = models.IntegerField(null=True, blank=True)
     year = models.IntegerField(null=True, blank=True)
-    decennary_year = models.IntegerField(null=True, blank=True)
     is_decennary = models.BooleanField(default=False)
     rating = models.IntegerField(null=True)
     creative = models.BooleanField(default=False)
@@ -78,7 +77,7 @@ class ImageData(models.Model):
     notes = models.TextField(null=True, blank=True)
     status = models.CharField(max_length=1, choices=PRODUCT_STATUS, default=PRODUCT_STATUS_NOT_PUBLISHED)
     scope = models.CharField(max_length=1, choices=SCOPE, default=ONLY_EDITORIAL)
-
+    support = models.CharField(max_length=255, null=True, blank=True, choices=SUPPORT_CHOICES)
 
     class Meta:
         db_table = 'image_data'

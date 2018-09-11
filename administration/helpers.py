@@ -21,6 +21,16 @@ COLOR_CHOICES = [
 ]
 COLORS = dict(COLOR_CHOICES)
 
+SUPPORT_35MM = '35mm'
+SUPPORT_6X6 = '6x6'
+SUPPORT_6X9 = '6x9'
+SUPPORT_CHOICES = [
+    (SUPPORT_6X6, SUPPORT_6X6),
+    (SUPPORT_35MM, SUPPORT_35MM),
+    (SUPPORT_6X9, SUPPORT_6X9)
+]
+SUPPORTS = dict(SUPPORT_CHOICES)
+
 
 def check_orientation(file):
     image = Image.open(file)

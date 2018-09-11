@@ -3,6 +3,11 @@ import requests
 
 from django.conf import settings
 
+
+class APIUpdateError(Exception):
+    pass
+
+
 class APIClient:
 
     VALID_OPS = {
@@ -30,8 +35,8 @@ class APIClient:
         resp = requests.post(self.srv, data={"data": json.dumps(payload)})
         if resp.status_code > 399:
             raise Exception(resp.content)
-        if resp.json() in ['NO FILE', 'NO DATA']:
-            return None
+        if resp.json() in ['NO FILE', 'NO DATA', 'NO CMD']:
+            raise APIUpdateError('Update failed {}'.format(resp.json()))
         return resp.json()
 
     def _cache(self, item, func):
@@ -58,11 +63,13 @@ class APIClient:
             'Rating': str(data.get('rating', 0)),
             'StatoProdotto': data.get('status'),
             'Note': data.get('notes', ''),
-            # TODO: Add real values
-            'Supporto': '6x6',
-            'Orientamento': data.get('orientation', '1'),
-            'Colore': data.get('color', 'B/N')
+            'Supporto': data.get('support', '6x6'),
+            'Orientamento': data.get('orientation', '1')
         }
+        if data.get('color'):
+            payload.update({
+                'Colore': data['color']
+            })
         if data.get('year') and data.get('month') and data.get('day'):
             payload.update({
                 'Data': '{:04}-{:02}-{:02}'.format(data['year'], data['month'], data['day'])
@@ -95,4 +102,7 @@ class APIClient:
         return self._make_request(op, data=self._prepare_form_data(**data))
 
     def get_file(self, filename):
-        return self._make_request('vk_v', data={'File': filename})
+        resp = self._make_request('vk_v', data={'File': filename})
+        if resp == 'NO VISOR KEY':
+            return None
+        return resp
