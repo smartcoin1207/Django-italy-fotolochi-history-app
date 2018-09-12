@@ -34,8 +34,8 @@ class APIClient:
         }
         resp = requests.post(self.srv, data={"data": json.dumps(payload)})
         if resp.status_code > 399:
-            raise Exception(resp.content)
-        if resp.json() in ['NO FILE', 'NO DATA', 'NO CMD']:
+            raise APIUpdateError(resp.content)
+        if resp.json() in ['NO FILE', 'NO DATA', 'NO CMD', 'NO VISOR']:
             raise APIUpdateError('Update failed {}'.format(resp.json()))
         return resp.json()
 
@@ -96,10 +96,15 @@ class APIClient:
         return [('Pic', 'Pic')]
 
     def update_visor(self, key, **data):
-        op = "mod_v"
-        if not key:
-            op = "in_v"
-        return self._make_request(op, data=self._prepare_form_data(**data))
+        op = "in_v"
+        prepared_data = self._prepare_form_data(**data)
+        if key:
+            op = "md_v"
+            prepared_data = {
+                'visor': key,
+                'data': prepared_data
+            }
+        return self._make_request(op, data=prepared_data)
 
     def get_file(self, filename):
         resp = self._make_request('vk_v', data={'File': filename})
