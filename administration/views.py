@@ -1,31 +1,25 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.shortcuts import render
-
-# Create your views here.
-
-from django.shortcuts import render
-
-from django.contrib.auth import views as auth_views
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.models import User
-from django.shortcuts import redirect, reverse
-from django.urls import reverse_lazy
-from django.http import HttpResponse, HttpResponseRedirect, HttpResponsePermanentRedirect, HttpRequest
-from .forms import EditForm
-from .models import ImageData, ImageFile
-from django.views import View
-from django.views.generic import UpdateView, ListView, DeleteView
-from os import listdir
-from os.path import isfile, join
-from .helpers import *
-import json
 import random
 import string
 import os
-from django.views.decorators.csrf import csrf_exempt
+from os import listdir
+from os.path import isfile, join
 
+from django.contrib.auth import views as auth_views
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import redirect, reverse
+from django.urls import reverse_lazy
+from django.http import HttpResponseRedirect, JsonResponse
+from django.views import View
+from django.views.generic import UpdateView, ListView, DeleteView
+
+from .api import APIDeleteError, delete_image_data
+
+from .helpers import *
+from .forms import EditForm
+from .models import ImageData, ImageFile
 
 
 def hash_file_name(filename):
@@ -163,6 +157,9 @@ class Delete(LoginRequiredMixin, DeleteView):
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()
         success_url = self.get_success_url()
+        try:
+            delete_image_data(self.object)
+        except APIDeleteError as e:
+            return JsonResponse({'error': str(e)})
 
-        self.object.delete()
         return HttpResponseRedirect(success_url)

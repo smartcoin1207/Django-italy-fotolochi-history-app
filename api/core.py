@@ -111,3 +111,10 @@ class APIClient:
         if resp == 'NO VISOR KEY':
             return None
         return resp
+
+    def delete_visor(self, key):
+        op = "dl_v"
+        resp = self._make_request(op, data={"visor": key})
+        if resp == "OK DEL VISOR":
+            return True
+        return None
