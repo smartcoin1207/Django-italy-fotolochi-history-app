@@ -8,6 +8,18 @@ class APIUpdateError(Exception):
     pass
 
 
+class APICategoryError(Exception):
+    pass
+
+
+class APITagError(Exception):
+    pass
+
+
+class APIPlaceError(Exception):
+    pass
+
+
 class APIClient:
 
     VALID_OPS = {
@@ -51,7 +63,7 @@ class APIClient:
             return self.__getattribute__(item)
         return self._cache(self.VALID_OPS[item], self._make_request)
 
-    def _prepare_form_data(self, **data):
+    def _prepare_form_data(self, create=True, **data):
         payload = {
             'Nome': data.get('title', ''),
             'File': data.get('file_name', ''),
@@ -76,15 +88,15 @@ class APIClient:
             })
         if data.get('year') and data.get('is_decennary'):
             payload.update({'Anno': '{}'.format(data['year'])})
-        if data.get('place'):
+        if create and data.get('place'):
             payload.update({
                 'Luogo': data['place']
             })
-        if data.get('tags'):
+        if create and data.get('tags'):
             payload.update({
                 'Tags': "|".join(data['tags'])
             })
-        if data.get('categories'):
+        if create and data.get('categories'):
             payload.update({
                 'Categoria': ";".join(data['categories'])
             })
@@ -97,13 +109,14 @@ class APIClient:
 
     def update_visor(self, key, **data):
         op = "in_v"
-        prepared_data = self._prepare_form_data(**data)
         if key:
             op = "md_v"
             prepared_data = {
                 'visor': key,
-                'data': prepared_data
+                'data': self._prepare_form_data(create=False, **data)
             }
+        else:
+            prepared_data = self._prepare_form_data(**data)
         return self._make_request(op, data=prepared_data)
 
     def get_file(self, filename):
@@ -118,3 +131,65 @@ class APIClient:
         if resp == "OK DEL VISOR":
             return True
         return None
+
+    def add_tag_to_visor(self, key, tag):
+        op = "ln_t"
+        resp = self._make_request(op, data={"tag": tag, "visor": key})
+        if resp == 'ERR TAG-VISOR':
+            raise APITagError('No connection tag-visor')
+        elif resp == 'NO TAG NAME':
+            raise APITagError('No such tag')
+        elif resp == 'NO VISOR KEY':
+            raise APITagError('No visor key')
+        return True
+
+    def delete_tag_from_visor(self, key, tag):
+        op = "ex_t"
+        resp = self._make_request(op, data={"tag": tag, "visor": key})
+        if resp == 'ERR TAG-VISOR':
+            raise APITagError('No connection tag-visor')
+        elif resp == 'NO TAG NAME':
+            raise APITagError('No such tag')
+        elif resp == 'NO VISOR KEY':
+            raise APITagError('No visor key')
+        return True
+
+    def add_place_to_visor(self, key, place):
+        op = "ln_l"
+        resp = self._make_request(op, data={"luogo": place, "visor": key})
+        if resp == 'ERR LOC-VISOR':
+            raise APIPlaceError('No connection tag-visor')
+        elif resp == 'NO LOC NAME':
+            raise APIPlaceError('No such place')
+        elif resp == 'NO VISOR KEY':
+            raise APIPlaceError('No visor key')
+        return True
+
+    def delete_place_from_visor(self, key, place):
+        op = "ex_l"
+        resp = self._make_request(op, data={"luogo": place, "visor": key})
+        if resp == 'ERR LOC-VISOR':
+            raise APIPlaceError('No connection tag-visor')
+        elif resp == 'NO LOC NAME':
+            raise APIPlaceError('No such place')
+        elif resp == 'NO VISOR KEY':
+            raise APIPlaceError('No visor key')
+        return True
+
+    def add_category_to_visor(self, key, category):
+        op = "ln_c"
+        resp = self._make_request(op, data={"cat": category, "visor": key})
+        if resp == 'ERR CAT-VISOR':
+            raise APICategoryError('No connection category-visor')
+        elif resp == 'NO VISOR KEY':
+            raise APICategoryError('No visor key')
+        return True
+
+    def delete_category_from_visor(self, key, category):
+        op = "ex_c"
+        resp = self._make_request(op, data={"cat": category, "visor": key})
+        if resp == 'ERR EXCL CAT-VISOR':
+            raise APICategoryError('No connection category-visor')
+        elif resp == 'NO VISOR':
+            raise APICategoryError('No visor key')
+        return True

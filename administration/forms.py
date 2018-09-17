@@ -2,7 +2,7 @@ from django import forms
 
 from .models import ImageData, ImageFile
 from .helpers import COLOR_CHOICES, ORIENTATION_CHOICES, SUPPORT_CHOICES
-from api.core import APIClient, APIUpdateError
+from api.core import APIClient, APIUpdateError, APICategoryError, APITagError, APIPlaceError
 
 
 class EditForm(forms.ModelForm):
@@ -109,15 +109,40 @@ class EditForm(forms.ModelForm):
             if self.cleaned_data['is_publish'] else ImageData.PRODUCT_STATUS_NOT_PUBLISHED
 
     def save(self, commit=True):
-        super(EditForm, self).save(commit=commit)
+        update_connections = False
         self.cleaned_data.update({
             'file_name': self.img_file.file_name
         })
         try:
+            if self.instance.api_id:
+                update_connections = True
             resp = self.client.update_visor(self.instance.api_id, **self.cleaned_data)
-        except APIUpdateError as e:
+            if update_connections:
+                import pudb;pudb.set_trace()
+                tags_to_delete = set(self.initial['tags']) - set(self.cleaned_data['tags'])
+                tags_to_add = set(self.cleaned_data['tags']) - set(self.initial['tags'])
+
+                for tag in tags_to_add:
+                    self.client.add_tag_to_visor(self.instance.api_id, tag)
+
+                for tag in tags_to_delete:
+                    self.client.delete_tag_from_visor(self.instance.api_id, tag)
+
+                categories_to_delete = set(self.initial['categories']) - set(self.cleaned_data['categories'])
+                categories_to_add = set(self.cleaned_data['categories']) - set(self.initial['categories'])
+
+                for category in categories_to_add:
+                    self.client.add_category_to_visor(self.instance.api_id, category)
+
+                for category in categories_to_delete:
+                    self.client.delete_category_from_visor(self.instance.api_id, category)
+
+                # TODO: Place - make many places
+
+        except (APIUpdateError, APICategoryError, APITagError, APIPlaceError) as e:
             self.request.session['msg'] = str(e)
         else:
+            super(EditForm, self).save(commit=commit)
             self.instance.api_id = resp['_key']
             self.instance.save()
         self.instance.img_file.color = self.cleaned_data['color']

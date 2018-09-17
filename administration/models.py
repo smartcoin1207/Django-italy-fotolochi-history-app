@@ -71,7 +71,7 @@ class ImageData(models.Model):
     creative = models.BooleanField(default=False)
     is_publish = models.BooleanField(default=False)
     tags = SeparatedValuesField(max_length=255, null=True, blank=True)
-    categories = SeparatedValuesField(max_length=255, null=True, blank=True)
+    categories = SeparatedValuesField(max_length=255, null=True, blank=True, token=';')
     place = models.TextField(null=True, blank=True)
     archive = models.CharField(max_length=255, null=True, blank=True)
     notes = models.TextField(null=True, blank=True)
