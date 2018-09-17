@@ -118,7 +118,6 @@ class EditForm(forms.ModelForm):
                 update_connections = True
             resp = self.client.update_visor(self.instance.api_id, **self.cleaned_data)
             if update_connections:
-                import pudb;pudb.set_trace()
                 tags_to_delete = set(self.initial['tags']) - set(self.cleaned_data['tags'])
                 tags_to_add = set(self.cleaned_data['tags']) - set(self.initial['tags'])
 
