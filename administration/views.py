@@ -31,35 +31,9 @@ def hash_file_name(filename):
 class Login(auth_views.LoginView):
     template_name = 'administration/login.html'
 
-#
-#     def post(self, request, *args, **kwargs):
-#         data = {'username': request.POST.get('username'), 'password': request.POST.get('password')}
-#         form = LoginForm(data=data)
-#         if form.is_valid():
-#             username = form.cleaned_data.get('username')
-#             password = form.cleaned_data.get('password')
-#             user = authenticate(username=username, password=password)
-#             if user is not None and user.is_active:
-#                 login(request, user)
-#                 return HttpResponseRedirect(reverse('administration:list'))
-#             else:
-#                 return render(request, 'administration/login.html', {'form': form, 'errors': 'username or pasword incorrect'})
-#         else:
-#             return render(request, 'administration/login.html', {'form': LoginForm()})
-#
-#     def get(self, request, *args, **kwargs):
-#         if request.user and request.user.is_authenticated:
-#             return HttpResponseRedirect(reverse('administration:list'))
-#         else:
-#             return render(request, 'administration/login.html', {'form': LoginForm()})
-#
-#
+
 class Logout(auth_views.LogoutView):
     template_name = 'administration/login.html'
-#     def get(self, request, *args, **kwargs):
-#         logout(request)
-#         return HttpResponseRedirect(reverse('administration:login'))
-
 
 
 class List(LoginRequiredMixin, ListView):
