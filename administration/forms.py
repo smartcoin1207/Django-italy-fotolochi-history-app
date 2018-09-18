@@ -147,5 +147,6 @@ class EditForm(forms.ModelForm):
         self.instance.img_file.color = self.cleaned_data['color']
         self.instance.img_file.orientation = self.cleaned_data['orientation']
         self.instance.img_file.save()
+        self.instance.mark_as_completed()
 
         return self.instance

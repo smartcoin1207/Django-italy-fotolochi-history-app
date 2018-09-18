@@ -69,6 +69,7 @@ class List(LoginRequiredMixin, ListView):
     context_object_name = 'list'
     ordering = ('-date_updated')
     paginate_by = 5
+    queryset = ImageData.objects.filter(is_completed=False)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         ctx = super(List, self).get_context_data(object_list=object_list, **kwargs)

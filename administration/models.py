@@ -78,6 +78,16 @@ class ImageData(models.Model):
     status = models.CharField(max_length=1, choices=PRODUCT_STATUS, default=PRODUCT_STATUS_NOT_PUBLISHED)
     scope = models.CharField(max_length=1, choices=SCOPE, default=ONLY_EDITORIAL)
     support = models.CharField(max_length=255, null=True, blank=True, choices=SUPPORT_CHOICES)
+    is_completed = models.BooleanField(default=False)
 
     class Meta:
         db_table = 'image_data'
+
+    def mark_as_completed(self):
+        if self.api_id and self.place and self.archive and self.title and \
+                self.short_description and self.full_description and \
+                self.categories and len(self.categories) > 0 and \
+                self.tags and len(self.tags) and self.rating and \
+                (self.year and self.is_decennary or self.year and self.day and self.month):
+            self.is_completed = True
+            self.save()

@@ -117,7 +117,10 @@ class APIClient:
             }
         else:
             prepared_data = self._prepare_form_data(**data)
-        return self._make_request(op, data=prepared_data)
+        resp = self._make_request(op, data=prepared_data)
+        if 'IN DATA' in resp:
+            raise APIUpdateError(resp)
+        return resp
 
     def get_file(self, filename):
         resp = self._make_request('vk_v', data={'File': filename})
