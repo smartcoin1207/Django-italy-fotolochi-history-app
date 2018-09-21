@@ -11,6 +11,16 @@ def update_color(apps, schema_editor):
             image.color = 'COL'
         image.save()
 
+
+def reverse_color(apps, schema_editor):
+    ImageFile = apps.get_model('administration', 'ImageFile')
+
+    for image in ImageFile.objects.all():
+        if image.color == 'COL':
+            image.color = 'C'
+        image.save()
+
+
 def update_categories_token(apps, schema_editor):
     ImageData = apps.get_model('administration', 'ImageData')
 
@@ -38,6 +48,6 @@ class Migration(migrations.Migration):
             name='color',
             field=models.CharField(blank=True, choices=[('B/N', 'B/N'), ('COL', 'Color')], max_length=10, null=True),
         ),
-        migrations.RunPython(update_color, lambda x,y: None),
+        migrations.RunPython(update_color, reverse_color),
         migrations.RunPython(update_categories_token, lambda x,y: None)
     ]

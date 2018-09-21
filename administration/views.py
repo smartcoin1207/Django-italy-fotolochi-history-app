@@ -8,6 +8,7 @@ from os import listdir
 from os.path import isfile, join
 
 from django.contrib.auth import views as auth_views
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, reverse
 from django.urls import reverse_lazy
@@ -15,7 +16,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.views import View
 from django.views.generic import UpdateView, ListView, DeleteView
 
-from .api import APIDeleteError, delete_image_data
+from .api import APIDeleteError, delete_image_data, APIClient
 
 from .helpers import *
 from .forms import EditForm
@@ -54,9 +55,6 @@ class List(LoginRequiredMixin, ListView):
 class GetNew(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
-
-        from fotolochi import settings
-        from api.core import APIClient
         client = APIClient()
         dir = settings.MEDIA_ROOT
         original_tmp_dir = settings.FTP_ROOT

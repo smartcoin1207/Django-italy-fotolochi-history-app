@@ -14,7 +14,7 @@ ORIENTATIONS = dict(ORIENTATION_CHOICES)
 
 
 BW = 'B/N'
-COLOR = 'COL'
+COLOR = 'C'
 COLOR_CHOICES = [
     (BW, 'B/N'),
     (COLOR, 'Color')
