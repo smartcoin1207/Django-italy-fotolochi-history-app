@@ -21,7 +21,7 @@
   <div class="column">
       File: {{ form.img_file.file_name }}
       <figure class="image">
-          <img src="/media/{{ form.preview.value }}" />
+          <img src="/media/{{ form.img_file.preview_name }}" />
       </figure>
   </div>
   <div class="column">
@@ -46,6 +46,9 @@
           <div class="control">
             {{ form.title }}
           </div>
+          {% if form.title.errors %}
+            <p class="help is-danger">{% for error in form.title.errors %}{{ error }}{% endfor %}</p>
+          {% endif %}
         </div>
 
         <div class="field">
@@ -53,6 +56,9 @@
           <div class="control">
             {{ form.short_description }}
           </div>
+          {% if form.short_description.errors %}
+            <p class="help is-danger">{% for error in form.short_description.errors %}{{ error }}{% endfor %}</p>
+          {% endif %}
         </div>
 
         <div class="field">
@@ -60,6 +66,9 @@
           <div class="control">
             {{ form.full_description }}
           </div>
+          {% if form.full_description.errors %}
+            <p class="help is-danger">{% for error in form.full_description.errors %}{{ error }}{% endfor %}</p>
+          {% endif %}
         </div>
 
         <div class="field">
@@ -76,13 +85,26 @@
              <p class="control">
                  {{ form.day }}
              </p>
+             {% if form.day.errors %}
+             <p class="help is-danger">{% for error in form.day.errors %}{{ error }}{% endfor %}</p>
+             {% endif %}
              <p class="control">
                  {{ form.month }}
              </p>
-             <p class="control">
-                 {{ form.year }}
-             </p>
+             {% if form.month.errors %}
+             <p class="help is-danger">{% for error in form.month.errors %}{{ error }}{% endfor %}</p>
+             {% endif %}
          </div>
+
+        <div class="field">
+            <label class="label">Year</label>
+            <div class="control">
+                 {{ form.year }}
+            </div>
+            {% if form.year.errors %}
+             <p class="help is-danger">{% for error in form.year.errors %}{{ error }}{% endfor %}</p>
+             {% endif %}
+        </div>
 
         <div class="field has-addons">
             <div class="field-label">
@@ -91,6 +113,9 @@
             <p class="control">
                 {{ form.is_decennary }}
             </p>
+            {% if form.is_decennary.errors %}
+             <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
+             {% endif %}
         </div>
 
         <div class="field">
@@ -107,6 +132,9 @@
             <p class="control">
                 {{ form.place }}
             </p>
+            {% if form.place.errors %}
+             <p class="help is-danger">{% for error in form.place.errors %}{{ error }}{% endfor %}</p>
+             {% endif %}
         </div>
 
         <div class="field">
@@ -114,6 +142,9 @@
             <p class="control">
                 {{ form.categories }}
             </p>
+            {% if form.categories.errors %}
+             <p class="help is-danger">{% for error in form.categories.errors %}{{ error }}{% endfor %}</p>
+             {% endif %}
         </div>
 
         <div class="field">
@@ -121,6 +152,9 @@
             <p class="control">
                 {{ form.tags }}
             </p>
+            {% if form.tags.errors %}
+             <p class="help is-danger">{% for error in form.tags.errors %}{{ error }}{% endfor %}</p>
+             {% endif %}
         </div>
 
         <div class="field">
@@ -128,6 +162,9 @@
           <div class="control">
             {{ form.rating }}
           </div>
+            {% if form.rating.errors %}
+             <p class="help is-danger">{% for error in form.rating.errors %}{{ error }}{% endfor %}</p>
+             {% endif %}
         </div>
 
         <div class="field">
@@ -137,6 +174,9 @@
                     {{ form.archive }}
                 </div>
             </div>
+            {% if form.archive.errors %}
+             <p class="help is-danger">{% for error in form.archive.errors %}{{ error }}{% endfor %}</p>
+             {% endif %}
         </div>
 
         <div class="field">

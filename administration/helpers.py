@@ -25,7 +25,7 @@ SUPPORT_35MM = '35mm'
 SUPPORT_6X6 = '6x6'
 SUPPORT_6X9 = '6x9'
 SUPPORT_CHOICES = [
-    (None, 'Choose support'),
+    (None, 'No support'),
     (SUPPORT_6X6, SUPPORT_6X6),
     (SUPPORT_35MM, SUPPORT_35MM),
     (SUPPORT_6X9, SUPPORT_6X9)
@@ -36,7 +36,9 @@ SUPPORTS = dict(SUPPORT_CHOICES)
 def check_orientation(file):
     image = Image.open(file)
     size = image.size
-    if size[0] > size[1]:
+    if size[0]/size[1] > 16/9.:
+        orientation = PANORAMIC
+    elif size[0] > size[1]:
         orientation = HORIZONTAL
     elif size[0] == size[1]:
         orientation = SQUARE

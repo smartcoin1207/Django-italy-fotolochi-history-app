@@ -7,18 +7,18 @@ from api.core import APIClient, APIUpdateError, APICategoryError, APITagError, A
 
 class EditForm(forms.ModelForm):
 
-    preview = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'form-control'}), label="Preview", required=False, max_length=128
-    )
+    # preview = forms.CharField(
+    #     widget=forms.TextInput(attrs={'class': 'form-control'}, ), label="Preview", required=True, max_length=128
+    # )
 
     title = forms.CharField(
-        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Titolo'}), label="Title", required=False, max_length=128)
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Titolo'}), label="Title", required=True, max_length=128)
 
     short_description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione breve'}), label="Short Description", required=False, max_length=128)
+        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione breve'}), label="Short Description", required=True, max_length=128)
 
     full_description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione'}), label="Full Description", required=False, max_length=256)
+        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione'}), label="Full Description", required=True, max_length=256)
 
     notes = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Note'}),
@@ -30,8 +30,9 @@ class EditForm(forms.ModelForm):
     month = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'mm'}), label="Month", required=False
     )
+
     year = forms.IntegerField(
-        widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'aaaa'}), label="Year", required=False
+        widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'aaaa'}), label="Year", required=True
     )
 
     is_decennary = forms.BooleanField(
@@ -43,7 +44,7 @@ class EditForm(forms.ModelForm):
     )
 
     rating = forms.IntegerField(
-        widget=forms.Select(choices=[(i,i) for i in range(1,6)]), label="Rating", required=False
+        widget=forms.Select(choices=[(i,i) for i in range(1,6)]), label="Rating", required=True
     )
 
     creative = forms.BooleanField(
@@ -55,19 +56,19 @@ class EditForm(forms.ModelForm):
     )
 
     place = forms.ChoiceField(
-        widget=forms.Select(attrs={}), label="Place", required=False
+        widget=forms.Select(attrs={}), label="Place", required=True
     )
 
     categories = forms.MultipleChoiceField(
-        widget=forms.SelectMultiple(attrs={}), label="Categorie", required=False
+        widget=forms.SelectMultiple(attrs={}), label="Categorie", required=True
     )
 
     tags = forms.MultipleChoiceField(
-        widget=forms.SelectMultiple(attrs={}), label="Tags", required=False
+        widget=forms.SelectMultiple(attrs={}), label="Tags", required=True
     )
 
     archive = forms.ChoiceField(
-        widget=forms.Select(), label="Archivio", required=False
+        widget=forms.Select(), label="Archivio", required=True
     )
 
     scope = forms.ChoiceField(
@@ -75,17 +76,18 @@ class EditForm(forms.ModelForm):
     )
 
     color = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=COLOR_CHOICES, label='Colore', required=False
+        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=COLOR_CHOICES, label='Colore', required=True
     )
 
     orientation = forms.ChoiceField(
-        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=ORIENTATION_CHOICES, label='Orientation', required=False
+        widget=forms.RadioSelect(attrs={'class': 'radio'}), choices=ORIENTATION_CHOICES, label='Orientation',
+        required=True
     )
 
     class Meta:
         model = ImageData
         exclude = []
-        fields = ['preview', 'title', 'short_description', 'full_description', 'rating', 'creative', 'is_publish',
+        fields = ['title', 'short_description', 'full_description', 'rating', 'creative', 'is_publish',
                   'place', 'tags', 'categories', 'archive', 'notes', 'day', 'month', 'year', 'is_decennary',
                   'scope', 'orientation', 'color', 'support']
 
@@ -95,11 +97,11 @@ class EditForm(forms.ModelForm):
         self.client = APIClient()
         if self.instance is not None:
             self.img_file = self.instance.img_file
-            self.fields['preview'].initial = self.instance.img_file.preview_name
+            # self.fields['preview'].initial = self.img_file.preview_name
             self.fields['place'].choices = [['', 'Select place']] + self.client.places
             self.fields['tags'].choices = [['', 'Select tag']] + [(i, i) for i in self.client.tags]
             self.fields['categories'].choices = [['', 'Select category']] + self.client.categories
-            self.fields['archive'].choices = [['', 'Select archive']] + self.client.archives
+            self.fields['archive'].choices = self.client.archives
             self.fields['color'].initial = self.instance.img_file.color
             self.fields['orientation'].initial = self.instance.img_file.orientation
 
@@ -107,6 +109,12 @@ class EditForm(forms.ModelForm):
         super(EditForm, self).clean()
         self.cleaned_data['status'] = ImageData.PRODUCT_STATUS_PUBLISHED \
             if self.cleaned_data['is_publish'] else ImageData.PRODUCT_STATUS_NOT_PUBLISHED
+        if self.cleaned_data.get('month') and not self.cleaned_data.get('day'):
+            self.add_error('day', 'Please define day')
+        if self.cleaned_data.get('day') and not self.cleaned_data.get('month'):
+            self.add_error('month', 'Please define month')
+        if self.cleaned_data.get('is_decennary') and (self.cleaned_data.get('day') or self.cleaned_data.get('month')):
+            self.add_error('is_decennary', 'Remove day/month values if it is decennary')
 
     def save(self, commit=True):
         update_connections = False

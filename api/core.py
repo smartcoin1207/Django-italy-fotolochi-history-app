@@ -86,8 +86,10 @@ class APIClient:
             payload.update({
                 'Data': '{:04}-{:02}-{:02}'.format(data['year'], data['month'], data['day'])
             })
-        if data.get('year') and data.get('is_decennary'):
+        if data.get('year'):
             payload.update({'Anno': '{}'.format(data['year'])})
+        if data.get('is_decennary'):
+            payload.update({'Decennio': 'S'})
         if create and data.get('place'):
             payload.update({
                 'Luogo': data['place']
