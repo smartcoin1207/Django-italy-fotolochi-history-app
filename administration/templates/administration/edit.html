@@ -17,15 +17,17 @@
 {% endblock %}
 
 {% block main %}
+<form action="." method="post">
 <div class="columns">
-  <div class="column">
+  <div class="column is-narrow">
+      <div class="box fotolocchi-side-img">
       File: {{ form.img_file.file_name }}
       <figure class="image">
           <img src="/media/{{ form.img_file.preview_name }}" />
       </figure>
+      </div>
   </div>
   <div class="column">
-    <form class="control" action="." method="post">
         {% csrf_token %}
         <div class="field">
           <label class="label">Colore</label>
@@ -208,7 +210,7 @@
             <button class="button is-text">Cancel</button>
           </div>
         </div>
-    </form>
   </div>
 </div>
+</form>
 {% endblock %}
