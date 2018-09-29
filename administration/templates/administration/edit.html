@@ -19,7 +19,7 @@
 {% block main %}
 <form action="." method="post">
 <div class="columns">
-  <div class="column is-narrow">
+  <div class="column is-narrow is-offset-2">
       <div class="box fotolocchi-side-img">
       File: {{ form.img_file.file_name }}
       <figure class="image">
@@ -27,7 +27,7 @@
       </figure>
       </div>
   </div>
-  <div class="column">
+  <div class="column is-half">
         {% csrf_token %}
         <div class="field">
           <label class="label">Colore</label>

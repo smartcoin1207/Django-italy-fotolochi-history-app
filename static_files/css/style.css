@@ -364,6 +364,42 @@
     height: 35px;
 }
 
+.br-theme-bars-square .br-widget a {
+    color: gray;
+    border-color: gray;
+}
+
+.br-theme-bars-square .br-widget a.br-selected {
+    border-color: black;
+    color: black;
+}
+
+.br-theme-bars-square .br-widget a.br-active {
+    border-color: black;
+    color: black;
+}
+
+.br-theme-bars-square .br-widget a.br-current {
+    border-color: black;
+    color: black;
+}
+
 .fotolocchi-side-img {
     width: 250px;
+}
+
+.input {
+    border-color: black;
+}
+
+.textarea {
+    border-color: black;
+}
+
+.selectize-input{
+    border-color: black;
+}
+
+.select select {
+    border-color: black;
 }
