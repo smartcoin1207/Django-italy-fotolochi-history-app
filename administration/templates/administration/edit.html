@@ -3,13 +3,13 @@
 
 
 {% block navbar %}
-    <div class="navbar-item">
-        <div class="field is-grouped">
-          <p class="control">
+<div class="navbar-item">
+    <div class="field is-grouped">
+        <p class="control">
             <a href="/administration/list/">Back To List</a>
-          </p>
-        </div>
+        </p>
     </div>
+</div>
 {% endblock %}
 
 {% block pre_css %}
@@ -18,200 +18,209 @@
 
 {% block main %}
 <form action="." method="post">
-<div class="columns">
-  <div class="column is-narrow is-offset-2">
-      <div class="box fotolocchi-side-img">
-      File: {{ form.img_file.file_name }}
-      <figure class="image">
-          <img src="/media/{{ form.img_file.preview_name }}" />
-      </figure>
-      </div>
-      <div class="field">
-          <label class="label">Colore</label>
-          <div class="control">
-            {{ form.color }}
-          </div>
-        </div>
-
-        <div class="field">
-          <label class="label">Orientation</label>
-          <div class="control">
-            {{ form.orientation }}
-          </div>
-        </div>
-  </div>
-  <div class="column is-half">
-        {% csrf_token %}
-
-
-        <div class="field">
-          <label class="label">Titolo immagine</label>
-          <div class="control">
-            {{ form.title }}
-          </div>
-          {% if form.title.errors %}
-            <p class="help is-danger">{% for error in form.title.errors %}{{ error }}{% endfor %}</p>
-          {% endif %}
-        </div>
-
-        <div class="field">
-          <label class="label">Descrizione breve</label>
-          <div class="control">
-            {{ form.short_description }}
-          </div>
-          {% if form.short_description.errors %}
-            <p class="help is-danger">{% for error in form.short_description.errors %}{{ error }}{% endfor %}</p>
-          {% endif %}
-        </div>
-
-        <div class="field">
-          <label class="label">Descrizione</label>
-          <div class="control">
-            {{ form.full_description }}
-          </div>
-          {% if form.full_description.errors %}
-            <p class="help is-danger">{% for error in form.full_description.errors %}{{ error }}{% endfor %}</p>
-          {% endif %}
-        </div>
-
-        <div class="field">
-          <label class="label">Note</label>
-          <div class="control">
-            {{ form.notes }}
-          </div>
-        </div>
-
-         <div class="field has-addons">
-             <div class="field-label">
-                <label class="label">Date</label>
-             </div>
-             <p class="control">
-                 {{ form.day }}
-             </p>
-             {% if form.day.errors %}
-             <p class="help is-danger">{% for error in form.day.errors %}{{ error }}{% endfor %}</p>
-             {% endif %}
-             <p class="control">
-                 {{ form.month }}
-             </p>
-             {% if form.month.errors %}
-             <p class="help is-danger">{% for error in form.month.errors %}{{ error }}{% endfor %}</p>
-             {% endif %}
-         </div>
-
-        <div class="field">
-            <label class="label">Year</label>
-            <div class="control">
-                 {{ form.year }}
+    <div class="columns">
+        <div class="column is-narrow is-offset-2">
+            <div class="box fotolocchi-side-img">
+                File: {{ form.img_file.file_name }}
+                <figure class="image">
+                    <img src="/media/{{ form.img_file.preview_name }}"/>
+                </figure>
             </div>
-            {% if form.year.errors %}
-             <p class="help is-danger">{% for error in form.year.errors %}{{ error }}{% endfor %}</p>
-             {% endif %}
-        </div>
+            <div class="field">
+                <label class="label">Colore</label>
+                <div class="control">
+                    {{ form.color }}
+                </div>
+            </div>
 
-        <div class="field has-addons">
-            <div class="field-label">
-                <label class="label">Decade</label>
-             </div>
-            <p class="control">
-                {{ form.is_decennary }}
-            </p>
-            {% if form.is_decennary.errors %}
-             <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
-             {% endif %}
-        </div>
-
-        <div class="field">
-            <div class="control">
-                <label class="label">Supporto</label>
-                <div class="select">
-                    {{ form.support }}
+            <div class="field">
+                <label class="label">Orientation</label>
+                <div class="control">
+                    {{ form.orientation }}
                 </div>
             </div>
         </div>
+        <div class="column is-half">
+            {% csrf_token %}
 
-        <div class="field">
-            <label class="label">Luogo</label>
-            <p class="control">
-                {{ form.place }}
-            </p>
-            {% if form.place.errors %}
-             <p class="help is-danger">{% for error in form.place.errors %}{{ error }}{% endfor %}</p>
-             {% endif %}
-        </div>
 
-        <div class="field">
-            <label class="label">Categorie</label>
-            <p class="control">
-                {{ form.categories }}
-            </p>
-            {% if form.categories.errors %}
-             <p class="help is-danger">{% for error in form.categories.errors %}{{ error }}{% endfor %}</p>
-             {% endif %}
-        </div>
+            <div class="field">
+                <label class="label">Titolo immagine</label>
+                <div class="control">
+                    {{ form.title }}
+                </div>
+                {% if form.title.errors %}
+                <p class="help is-danger">{% for error in form.title.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
 
-        <div class="field">
-            <label class="label">Tags</label>
-            <p class="control">
-                {{ form.tags }}
-            </p>
-            {% if form.tags.errors %}
-             <p class="help is-danger">{% for error in form.tags.errors %}{{ error }}{% endfor %}</p>
-             {% endif %}
-        </div>
+            <div class="field">
+                <label class="label">Descrizione breve</label>
+                <div class="control">
+                    {{ form.short_description }}
+                </div>
+                {% if form.short_description.errors %}
+                <p class="help is-danger">{% for error in form.short_description.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
 
-        <div class="field">
-          <label class="label">Rating immagine</label>
-          <div class="control">
-            {{ form.rating }}
-          </div>
-            {% if form.rating.errors %}
-             <p class="help is-danger">{% for error in form.rating.errors %}{{ error }}{% endfor %}</p>
-             {% endif %}
-        </div>
+            <div class="field">
+                <label class="label">Descrizione</label>
+                <div class="control">
+                    {{ form.full_description }}
+                </div>
+                {% if form.full_description.errors %}
+                <p class="help is-danger">{% for error in form.full_description.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
 
-        <div class="field">
-            <div class="control">
-                <label class="label">Archivio</label>
-                <div class="select">
-                    {{ form.archive }}
+            <div class="field">
+                <label class="label">Note</label>
+                <div class="control">
+                    {{ form.notes }}
                 </div>
             </div>
-            {% if form.archive.errors %}
-             <p class="help is-danger">{% for error in form.archive.errors %}{{ error }}{% endfor %}</p>
-             {% endif %}
-        </div>
+            <div class="columns">
+                <div class="column">
+                    <div class="field">
 
-        <div class="field">
-          <label class="label">Creative</label>
-          <div class="control">
-            {{ form.creative }}
-          </div>
-        </div>
+                            <label class="label">Date</label>
 
-        <div class="field">
-          <label class="label">Is publish</label>
-          <div class="control">
-            {{ form.is_publish }}
-          </div>
-        </div>
+                        <div class="field-body">
+                            <p class="control">
+                                {{ form.day }}
+                            </p>
+                            {% if form.day.errors %}
+                            <p class="help is-danger">{% for error in form.day.errors %}{{ error }}{% endfor %}</p>
+                            {% endif %}
+                            <p class="control">
+                                {{ form.month }}
+                            </p>
+                            {% if form.month.errors %}
+                            <p class="help is-danger">{% for error in form.month.errors %}{{ error }}{% endfor %}</p>
+                            {% endif %}
+                        </div>
+                    </div>
 
-        <div class="field">
-          <label class="label">Utenza</label>
-          <div class="control">
-            {{ form.scope }}
-          </div>
-        </div>
+                </div>
+                <div class="column">
+                    <div class="field">
+                        <label class="label">Year</label>
+                        <div class="control">
+                            {{ form.year }}
+                        </div>
+                        {% if form.year.errors %}
+                        <p class="help is-danger">{% for error in form.year.errors %}{{ error }}{% endfor %}</p>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="column">
+                    <div class="field">
 
-        <div class="field is-grouped">
-          <div class="control">
-            <button class="button is-link">Submit</button>
-          </div>
-          <div class="control">
-            <button class="button is-text">Cancel</button>
-          </div>
+                            <label class="label">Decade</label>
+
+                        <p class="control">
+                            {{ form.is_decennary }}
+                        </p>
+                        {% if form.is_decennary.errors %}
+                        <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="field">
+                <div class="control">
+                    <label class="label">Supporto</label>
+                    <div class="select">
+                        {{ form.support }}
+                    </div>
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Luogo</label>
+                <p class="control">
+                    {{ form.place }}
+                </p>
+                {% if form.place.errors %}
+                <p class="help is-danger">{% for error in form.place.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label class="label">Categorie</label>
+                <p class="control">
+                    {{ form.categories }}
+                </p>
+                {% if form.categories.errors %}
+                <p class="help is-danger">{% for error in form.categories.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label class="label">Tags</label>
+                <p class="control">
+                    {{ form.tags }}
+                </p>
+                {% if form.tags.errors %}
+                <p class="help is-danger">{% for error in form.tags.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label class="label">Rating immagine</label>
+                <div class="control">
+                    {{ form.rating }}
+                </div>
+                {% if form.rating.errors %}
+                <p class="help is-danger">{% for error in form.rating.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <div class="control">
+                    <label class="label">Archivio</label>
+                    <div class="select">
+                        {{ form.archive }}
+                    </div>
+                </div>
+                {% if form.archive.errors %}
+                <p class="help is-danger">{% for error in form.archive.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label class="label">Creative</label>
+                <div class="control">
+                    {{ form.creative }}
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Is publish</label>
+                <div class="control">
+                    {{ form.is_publish }}
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Utenza</label>
+                <div class="control">
+                    {{ form.scope }}
+                </div>
+            </div>
+
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link">Submit</button>
+                </div>
+                <div class="control">
+                    <button class="button is-text">Cancel</button>
+                </div>
+            </div>
         </div>
-  </div>
-</div>
+    </div>
 </form>
 {% endblock %}
