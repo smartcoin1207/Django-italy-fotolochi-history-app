@@ -26,10 +26,7 @@
           <img src="/media/{{ form.img_file.preview_name }}" />
       </figure>
       </div>
-  </div>
-  <div class="column is-half">
-        {% csrf_token %}
-        <div class="field">
+      <div class="field">
           <label class="label">Colore</label>
           <div class="control">
             {{ form.color }}
@@ -42,6 +39,10 @@
             {{ form.orientation }}
           </div>
         </div>
+  </div>
+  <div class="column is-half">
+        {% csrf_token %}
+
 
         <div class="field">
           <label class="label">Titolo immagine</label>
