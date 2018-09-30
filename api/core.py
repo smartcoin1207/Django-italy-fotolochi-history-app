@@ -107,7 +107,7 @@ class APIClient:
     @property
     def archives(self):
         # TODO: Add real response?
-        return [('Pic', 'Archivio Foto Locchi'), ('Other', 'Other')]
+        return [('Pic', 'Pic'), ('Other', 'Other')]
 
     def update_visor(self, key, **data):
         op = "in_v"
