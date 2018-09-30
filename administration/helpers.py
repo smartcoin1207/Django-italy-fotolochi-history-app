@@ -25,7 +25,7 @@ SUPPORT_35MM = '35mm'
 SUPPORT_6X6 = '6x6'
 SUPPORT_6X9 = '6x9'
 SUPPORT_CHOICES = [
-    (None, 'No support'),
+    (None, 'Senza supporto'),
     (SUPPORT_6X6, SUPPORT_6X6),
     (SUPPORT_35MM, SUPPORT_35MM),
     (SUPPORT_6X9, SUPPORT_6X9)
