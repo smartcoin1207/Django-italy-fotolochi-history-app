@@ -34,9 +34,9 @@
 
     {% for row in list %}
         <tr>
-            <td><img src="/media/{{ row.img_file.thumb_name }}" alt="current img" data-object-fit="contain"></td>
-            <td>{{ row.title }}</td>
-            <td>{{ row.img_file.file_name }}</td>
+            <td><a href="{% url 'administration:edit' pk=row.id %}"><img src="/media/{{ row.img_file.thumb_name }}" alt="current img" data-object-fit="contain"></a></td>
+            <td><a href="{% url 'administration:edit' pk=row.id %}">{{ row.title }}</a></td>
+            <td><a href="{% url 'administration:edit' pk=row.id %}">{{ row.img_file.file_name }}</a></td>
             <td>No</td>
             <td>
                 <a class="button" href="{% url 'administration:edit' pk=row.id %}">
