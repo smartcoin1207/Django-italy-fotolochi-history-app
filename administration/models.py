@@ -88,6 +88,6 @@ class ImageData(models.Model):
                 self.short_description and self.full_description and \
                 self.categories and len(self.categories) > 0 and \
                 self.tags and len(self.tags) and self.rating and \
-                (self.year and self.is_decennary or self.year and self.day and self.month):
+                self.year:
             self.is_completed = True
             self.save()
