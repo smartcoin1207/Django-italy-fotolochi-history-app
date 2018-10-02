@@ -63,12 +63,13 @@ class GetNew(LoginRequiredMixin, View):
         preview_dir = dir + 'preview/'
         files = [f for f in listdir(original_tmp_dir) if isfile(join(original_tmp_dir, f))]
 
-        # files_in_db = ImageFile.objects.filter(file_name__in=files).values_list('file_name', flat=True)
+        files_in_db = list(ImageFile.objects.filter(file_name__in=files).values_list('file_name', flat=True))
         if files:
             # TODO: move to Celery tasks
             for file in files:
-                file_info = client.get_file(os.path.basename(file))
-                if not file_info:
+                file_name = os.path.basename(file)
+                file_info = client.get_file(file_name)
+                if not file_info and file_name not in files_in_db:
 
                     orientation = check_orientation(original_tmp_dir + file)
                     color = detect_color_image(file=original_tmp_dir + file)
@@ -101,9 +102,11 @@ class GetNew(LoginRequiredMixin, View):
                     img.save()
                     img_data = ImageData(img_file=img)
                     img_data.save()
-
-                    os.remove(original_tmp_dir + file)
+                    # XXX: DO NOT UNCOMMENT!!!! FILES SHOULD NOT BE DELETED!
+                    # os.remove(original_tmp_dir + file)
                     request.session['msg'] = 'New files was added to list'
+                else:
+                    request.session['msg'] = 'New files in the original_tmp directory not found'
         else:
             request.session['msg'] = 'New files in the original_tmp directory not found'
 
