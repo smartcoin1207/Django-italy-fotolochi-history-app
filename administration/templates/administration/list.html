@@ -42,9 +42,6 @@
                 <a class="button" href="{% url 'administration:edit' pk=row.id %}">
                     <span class="icon"><i class="fas fa-edit" aria-hidden="true"></i></span>
                 </a>
-                <a class="button delete-button" href="{% url 'administration:delete' pk=row.id %}">
-                    <span class="icon"><i class="fas fa-trash" aria-hidden="true"></i></span>
-                </a>
             </td>
         </tr>
     {% endfor %}

@@ -126,16 +126,16 @@ class Edit(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
-class Delete(LoginRequiredMixin, DeleteView):
-    success_url = reverse_lazy('administration:list')
-    queryset = ImageData.objects.select_related('img_file').all()
-
-    def delete(self, request, *args, **kwargs):
-        self.object = self.get_object()
-        success_url = self.get_success_url()
-        try:
-            delete_image_data(self.object)
-        except APIDeleteError as e:
-            return JsonResponse({'error': str(e)})
-
-        return HttpResponseRedirect(success_url)
+# class Delete(LoginRequiredMixin, DeleteView):
+#     success_url = reverse_lazy('administration:list')
+#     queryset = ImageData.objects.select_related('img_file').all()
+#
+#     def delete(self, request, *args, **kwargs):
+#         self.object = self.get_object()
+#         success_url = self.get_success_url()
+#         try:
+#             delete_image_data(self.object)
+#         except APIDeleteError as e:
+#             return JsonResponse({'error': str(e)})
+#
+#         return HttpResponseRedirect(success_url)
