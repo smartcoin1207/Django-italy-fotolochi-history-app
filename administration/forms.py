@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from django import forms
 
 from .models import ImageData, ImageFile
@@ -104,6 +106,14 @@ class EditForm(forms.ModelForm):
             self.fields['archive'].choices = self.client.archives
             self.fields['color'].initial = self.instance.img_file.color
             self.fields['orientation'].initial = self.instance.img_file.orientation
+
+    def clean_year(self, value):
+        value = super(EditForm, self).clean_year(value)
+        if value > datetime.now().year:
+            raise forms.ValidationError('Year should be less or equal current year')
+        if value < 0:
+            raise forms.ValidationError('Can\'t assign negative values to year')
+        return value
 
     def clean(self):
         super(EditForm, self).clean()

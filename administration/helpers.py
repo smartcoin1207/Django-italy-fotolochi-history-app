@@ -1,3 +1,5 @@
+import random
+import string
 from PIL import Image, ImageStat
 
 HORIZONTAL = 1
@@ -31,6 +33,12 @@ SUPPORT_CHOICES = [
     (SUPPORT_6X9, SUPPORT_6X9)
 ]
 SUPPORTS = dict(SUPPORT_CHOICES)
+
+
+def hash_file_name(filename):
+    key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(30))
+    filename = key + '.' + filename.split('.')[1]
+    return filename
 
 
 def check_orientation(file):

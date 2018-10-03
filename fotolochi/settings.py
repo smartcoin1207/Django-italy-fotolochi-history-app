@@ -130,6 +130,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media/')
 
 # FTP
 FTP_ROOT = os.path.join(MEDIA_ROOT, 'original_tmp/')
+ORIGINAL_ROOT = os.path.join(MEDIA_ROOT, 'original/')
+THUMB_ROOT = os.path.join(MEDIA_ROOT, 'thumb/')
+PREVIEW_ROOT = os.path.join(MEDIA_ROOT, 'preview/')
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static_files'),

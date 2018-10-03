@@ -16,17 +16,11 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.views import View
 from django.views.generic import UpdateView, ListView, DeleteView
 
-from .api import APIDeleteError, delete_image_data, APIClient
+from .api import APIDeleteError, delete_image_data, APIClient, import_file
 
-from .helpers import *
+
 from .forms import EditForm
 from .models import ImageData, ImageFile
-
-
-def hash_file_name(filename):
-    key = ''.join(random.choice(string.ascii_lowercase + string.digits) for _ in range(30))
-    filename = key + '.' + filename.split('.')[1]
-    return filename
 
 
 class Login(auth_views.LoginView):
@@ -56,56 +50,19 @@ class GetNew(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         client = APIClient()
-        dir = settings.MEDIA_ROOT
-        original_tmp_dir = settings.FTP_ROOT
-        original_dir = dir + 'original/'
-        thumb_dir = dir + 'thumb/'
-        preview_dir = dir + 'preview/'
-        files = [f for f in listdir(original_tmp_dir) if isfile(join(original_tmp_dir, f))]
-
+        files = [f for f in listdir(settings.FTP_ROOT) if isfile(join(settings.FTP_ROOT, f))]
         files_in_db = list(ImageFile.objects.filter(file_name__in=files).values_list('file_name', flat=True))
         if files:
             # TODO: move to Celery tasks
             for file in files:
+                file_path = os.path.join(settings.FTP_ROOT, file)
                 file_name = os.path.basename(file)
                 file_info = client.get_file(file_name)
-                if not file_info and file_name not in files_in_db:
-
-                    orientation = check_orientation(original_tmp_dir + file)
-                    color = detect_color_image(file=original_tmp_dir + file)
-                    thumb_name = 'thumb_' + file
-                    preview_name = 'prev_' + file
-
-                    original = Image.open(original_tmp_dir + file)
-                    ext_original = hash_file_name(file)
-                    original.save(original_dir + ext_original)
-
-                    ext_thumb = hash_file_name(thumb_name)
-                    thumb = resize_and_crop(original_tmp_dir + file, thumb_dir + ext_thumb, size=(128, 128))
-
-                    ext_prev = hash_file_name(preview_name)
-                    preview = make_preview(original_tmp_dir + file, preview_dir + ext_prev, size=(1000, 1000))
-
-                    if not preview:
-                        preview_name = 'None'
-                    if not thumb:
-                        thumb_name = 'None'
-
-                    img = ImageFile(file_name=file,
-                                    original_name='original/' + ext_original,
-                                    thumb_name='thumb/' + ext_thumb,
-                                    preview_name='preview/' + ext_prev,
-                                    is_new=True,
-                                    color=color,
-                                    orientation=orientation)
-
-                    img.save()
-                    img_data = ImageData(img_file=img)
-                    img_data.save()
-                    # XXX: DO NOT UNCOMMENT!!!! FILES SHOULD NOT BE DELETED!
-                    # os.remove(original_tmp_dir + file)
+                if file_name not in files_in_db:
+                    import_file(file_path, file_name, file_info=file_info)
                     request.session['msg'] = 'New files was added to list'
                 else:
+                    os.remove(file_path)
                     request.session['msg'] = 'New files in the original_tmp directory not found'
         else:
             request.session['msg'] = 'New files in the original_tmp directory not found'
