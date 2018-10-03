@@ -47,7 +47,8 @@ def import_file(file_path, file_name, file_info=None):
     preview_name = 'prev_' + file_name
 
     original = Image.open(file_path)
-    ext_original = hash_file_name(file_name)
+    # ext_original = hash_file_name(file_name)
+    ext_original = file_name
     original.save(os.path.join(settings.ORIGINAL_ROOT, ext_original))
 
     ext_thumb = hash_file_name(thumb_name)
