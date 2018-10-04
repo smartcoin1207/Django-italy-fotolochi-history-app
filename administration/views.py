@@ -50,7 +50,7 @@ class GetNew(LoginRequiredMixin, View):
 
     def get(self, request, *args, **kwargs):
         client = APIClient()
-        files = [f for f in listdir(settings.FTP_ROOT) if isfile(join(settings.FTP_ROOT, f))]
+        files = [f for f in listdir(settings.FTP_ROOT) if isfile(join(settings.FTP_ROOT, f)) and f.lower().endswith('jpg')]
         files_in_db = list(ImageFile.objects.filter(file_name__in=files).values_list('file_name', flat=True))
         if files:
             # TODO: move to Celery tasks
