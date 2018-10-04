@@ -62,8 +62,8 @@ class GetNew(LoginRequiredMixin, View):
                     import_file(file_path, file_name, file_info=file_info)
                     request.session['msg'] = 'New files was added to list'
                 else:
-                    os.remove(file_path)
                     request.session['msg'] = 'New files in the original_tmp directory not found'
+                os.remove(file_path)
         else:
             request.session['msg'] = 'New files in the original_tmp directory not found'
 
