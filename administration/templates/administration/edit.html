@@ -21,7 +21,7 @@
     <div class="columns">
         <div class="column is-narrow is-offset-2">
             <div class="fotolocchi-side-img">
-                File: {{ form.img_file.file_name }}
+                <span class="fotolocchi-side-img-title">File: {{ form.img_file.file_name }}</span>
                 <figure class="image">
                     <img src="/media/{{ form.img_file.preview_name }}"/>
                 </figure>
@@ -75,8 +75,8 @@
             </div>
 
             <div class="field">
-                <label class="label">Note</label>
-                <div class="control">
+                <label class="label is-greyed">Note</label>
+                <div class="control is-greyed">
                     {{ form.notes }}
                 </div>
             </div>
@@ -116,12 +116,10 @@
                 </div>
                 <div class="column">
                     <div class="field">
-
-                            <label class="label">Decade</label>
-
-                        <p class="control">
+                        <label class="checkbox label">
                             {{ form.is_decennary }}
-                        </p>
+                            Decade
+                        </label>
                         {% if form.is_decennary.errors %}
                         <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
                         {% endif %}

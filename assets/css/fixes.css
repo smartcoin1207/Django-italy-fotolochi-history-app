@@ -27,6 +27,12 @@
     margin: 20px 0 35px 0;
 }
 
+.fotolocchi-side-img-title {
+    font-weight: bold;
+    display: block;
+    margin: 0 0 10px 0;
+}
+
 .input {
     border-color: black;
 }
@@ -49,4 +55,12 @@
 
 thead {
     background-color: #dbdbdb;
+}
+
+.is-greyed {
+    color: #dbdbdb;
+}
+
+.is-greyed > .textarea {
+    border-color: #dbdbdb;
 }
