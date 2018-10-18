@@ -404,3 +404,11 @@
 .select select {
     border-color: black;
 }
+
+.navbar-item img {
+    max-height: 3.75rem;
+}
+
+thead {
+    background-color: #dbdbdb;
+}
