@@ -4,6 +4,7 @@ import barrating from 'jquery-bar-rating'
 
 import 'selectize/dist/css/selectize.css'
 import 'jquery-bar-rating/dist/themes/bars-square.css'
+import 'bulma-divider/dist/css/bulma-divider.min.css'
 import '../css/fixes.css'
 
 $( function () {

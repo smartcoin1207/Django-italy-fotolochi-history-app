@@ -114,17 +114,16 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="column">
-                    <div class="field">
-                        <label class="checkbox label">
-                            {{ form.is_decennary }}
-                            Decade
-                        </label>
-                        {% if form.is_decennary.errors %}
-                        <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
-                        {% endif %}
-                    </div>
-                </div>
+            </div>
+
+            <div class="field">
+                <label class="checkbox label">
+                    {{ form.is_decennary }}
+                    Decade
+                </label>
+                {% if form.is_decennary.errors %}
+                <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
             </div>
 
 
@@ -146,6 +145,8 @@
                 <p class="help is-danger">{% for error in form.place.errors %}{{ error }}{% endfor %}</p>
                 {% endif %}
             </div>
+
+            <div class="is-divider"></div>
 
             <div class="field">
                 <label class="label">Categorie</label>
@@ -190,17 +191,7 @@
             </div>
 
             <div class="field">
-                <label class="label">Creative</label>
-                <div class="control">
-                    {{ form.creative }}
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="label">Is publish</label>
-                <div class="control">
-                    {{ form.is_publish }}
-                </div>
+                <label class="label checkbox">{{ form.creative }}&nbsp;Creative</label>
             </div>
 
             <div class="field">
@@ -210,9 +201,15 @@
                 </div>
             </div>
 
-            <div class="field is-grouped">
+            <div class="field">
+                <label class="checkbox label">
+                    {{ form.is_publish }}&nbsp;Public
+                </label>
+            </div>
+
+            <div class="field is-grouped has-top-margin">
                 <div class="control">
-                    <button class="button is-link">Submit</button>
+                    <button class="button is-link">Aggiungi/Modifica immagine</button>
                 </div>
                 <div class="control">
                     <button class="button is-text">Cancel</button>

@@ -9,17 +9,20 @@
 
 .br-theme-bars-square .br-widget a.br-selected {
     border-color: black;
-    color: black;
+    background-color: black;
+    color: white;
 }
 
 .br-theme-bars-square .br-widget a.br-active {
     border-color: black;
-    color: black;
+    background-color: black;
+    color: white;
 }
 
 .br-theme-bars-square .br-widget a.br-current {
     border-color: black;
-    color: black;
+    background-color: black;
+    color: white;
 }
 
 .fotolocchi-side-img {
@@ -63,4 +66,8 @@ thead {
 
 .is-greyed > .textarea {
     border-color: #dbdbdb;
+}
+
+.has-top-margin {
+    margin-top: 35px;
 }
