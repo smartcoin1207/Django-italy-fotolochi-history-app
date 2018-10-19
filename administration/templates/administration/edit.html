@@ -126,16 +126,6 @@
                 {% endif %}
             </div>
 
-
-            <div class="field">
-                <div class="control">
-                    <label class="label">Supporto</label>
-                    <div class="select">
-                        {{ form.support }}
-                    </div>
-                </div>
-            </div>
-
             <div class="field">
                 <label class="label">Luogo</label>
                 <p class="control">
@@ -147,6 +137,15 @@
             </div>
 
             <div class="is-divider"></div>
+
+            <div class="field">
+                <div class="control">
+                    <label class="label">Supporto</label>
+                    <div class="select">
+                        {{ form.support }}
+                    </div>
+                </div>
+            </div>
 
             <div class="field">
                 <label class="label">Categorie</label>
@@ -177,6 +176,8 @@
                 <p class="help is-danger">{% for error in form.rating.errors %}{{ error }}{% endfor %}</p>
                 {% endif %}
             </div>
+
+            <div class="is-divider"></div>
 
             <div class="field">
                 <div class="control">
