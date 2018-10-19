@@ -54,6 +54,7 @@ class EditForm(forms.ModelForm):
     )
 
     is_publish = forms.BooleanField(
+        initial=True,
         widget=forms.CheckboxInput(attrs={'class': 'checkbox'}), label="Is Publish", required=False
     )
 
