@@ -83,6 +83,13 @@ class Edit(LoginRequiredMixin, UpdateView):
         return kwargs
 
 
+class TagView(LoginRequiredMixin, View):
+
+    def post(self, request, *args, **kwargs):
+        client = APIClient()
+        res = client.create_tag(request.POST['input'])
+        return JsonResponse({'id': res, 'value': res})
+
 # class Delete(LoginRequiredMixin, DeleteView):
 #     success_url = reverse_lazy('administration:list')
 #     queryset = ImageData.objects.select_related('img_file').all()

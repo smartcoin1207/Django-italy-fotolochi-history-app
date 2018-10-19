@@ -16,7 +16,28 @@ $( function () {
        }
     }
   });
-  $('#id_tags').selectize();
+  $('#id_tags').selectize({
+    create:function (input, callback){
+        console.log($.fn.jquery);
+        $.ajax({
+            url: '/administration/add-tag/',
+            type: 'POST',
+            data: {"input": input},
+            xhrFields: {
+              withCredentials: true
+            },
+            success: function (result) {
+                console.log("SUC", result);
+                if (result) {
+                    callback({ value: result.id, text: input });
+                }
+            },
+            error: function (result) {
+                console.log("ERR", result);
+            }
+        });
+    }
+  });
   $('#id_place').selectize();
   $('#id_categories').selectize();
   $('#id_rating').barrating('show', {

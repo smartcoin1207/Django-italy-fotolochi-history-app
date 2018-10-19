@@ -1,6 +1,6 @@
 from django.conf.urls import url, include, re_path
 
-from .views import Login, Logout, List, GetNew, Edit
+from .views import Login, Logout, List, GetNew, Edit, TagView
 # from .views import Delete
 
 from django.views.decorators.csrf import csrf_exempt
@@ -11,6 +11,7 @@ administration = ([
     url(r'^list/', List.as_view(), name='list'),
     url(r'^get_new/', GetNew.as_view(), name='get_new'),
     url(r'^edit/(?P<pk>\d+)/$', Edit.as_view(), name='edit'),
+    url(r'^add-tag/', TagView.as_view(), name='add-tag'),
     # url(r'^delete/(?P<pk>\d+)/$', Delete.as_view(), name='delete'),
 
 ], 'administration')

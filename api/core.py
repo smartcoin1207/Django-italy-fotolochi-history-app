@@ -104,6 +104,10 @@ class APIClient:
             })
         return payload
 
+    def create_tag(self, value):
+        res = self._make_request("in_t", data={"Nome": value})
+        return res
+
     @property
     def archives(self):
         # TODO: Add real response?
