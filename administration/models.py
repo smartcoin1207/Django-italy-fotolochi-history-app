@@ -69,7 +69,7 @@ class ImageData(models.Model):
     is_decennary = models.BooleanField(default=False)
     rating = models.IntegerField(null=True)
     creative = models.BooleanField(default=False)
-    is_publish = models.BooleanField(default=False)
+    is_publish = models.BooleanField(default=True)
     tags = SeparatedValuesField(max_length=255, null=True, blank=True)
     categories = SeparatedValuesField(max_length=255, null=True, blank=True, token=';')
     place = models.TextField(null=True, blank=True)
