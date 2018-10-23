@@ -1,3 +1,11 @@
+# Selectize
+
+.selectize-dropdown-content .active strong {
+    font-size: 50px;
+}
+
+
+# Bar
 .br-theme-bars-square .br-widget {
     height: 35px;
 }

@@ -17,8 +17,12 @@ $( function () {
     }
   });
   $('#id_tags').selectize({
+    render: {
+        option_create: function(data, escape) {
+          return '<div class="create" style="line-height: 2rem; vertical-align: middle; height: 2rem; font-size: 1.5rem;">Add <strong>' + escape(data.input) + '</strong>&hellip;</div>';
+        }
+    },
     create:function (input, callback){
-        console.log($.fn.jquery);
         $.ajax({
             url: '/administration/add-tag/',
             type: 'POST',
@@ -27,7 +31,6 @@ $( function () {
               withCredentials: true
             },
             success: function (result) {
-                console.log("SUC", result);
                 if (result) {
                     callback({ value: result.id, text: input });
                 }

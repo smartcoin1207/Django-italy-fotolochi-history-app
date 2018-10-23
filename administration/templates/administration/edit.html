@@ -93,6 +93,7 @@
                             {% if form.day.errors %}
                             <p class="help is-danger">{% for error in form.day.errors %}{{ error }}{% endfor %}</p>
                             {% endif %}
+                            &nbsp;
                             <p class="control">
                                 {{ form.month }}
                             </p>
@@ -213,7 +214,7 @@
                     <button class="button is-large is-black">Aggiungi/Modifica immagine</button>
                 </div>
                 <div class="control">
-                    <button class="button is-text">Cancel</button>
+                    <button class="button is-text is-large">Cancel</button>
                 </div>
             </div>
         </div>

@@ -18,7 +18,7 @@
     <div class="column">
 
     {% if msg %}
-        <p style="color: green">{{ msg }}</p>
+        <p style="color: green; background-color: #f5f5f5;">{{ msg }}</p>
     {% endif %}
   <table id="example" class="table is-striped is-fullwidth">
     <thead>
@@ -55,8 +55,6 @@
 {% block pagination %}
     {% if is_paginated %}
         <nav class="pagination" role="navigation" aria-label="pagination">
-          <!--<a class="pagination-previous">Previous</a>-->
-          <!--<a class="pagination-next">Next page</a>-->
           <ul class="pagination-list">
             {% if page_obj.has_previous %}
               <li>
