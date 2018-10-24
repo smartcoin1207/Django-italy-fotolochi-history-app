@@ -98,15 +98,15 @@ class EditForm(forms.ModelForm):
         self.request = kwargs.pop('request', None)
         super(EditForm, self).__init__(*args, **kwargs)
         self.client = APIClient()
-        if self.instance is not None:
+        if self.instance is not None and getattr(self.instance, 'img_file', False):
             self.img_file = self.instance.img_file
-            # self.fields['preview'].initial = self.img_file.preview_name
-            self.fields['place'].choices = [['', 'Select place']] + self.client.places
-            self.fields['tags'].choices = [['', 'Select tag']] + [(i, i) for i in self.client.tags]
-            self.fields['categories'].choices = [['', 'Select category']] + self.client.categories
-            self.fields['archive'].choices = self.client.archives
             self.fields['color'].initial = self.instance.img_file.color
             self.fields['orientation'].initial = self.instance.img_file.orientation
+        self.fields['place'].choices = [['', 'Select place']] + self.client.places
+        self.fields['tags'].choices = [['', 'Select tag']] + [(i, i) for i in self.client.tags]
+        self.fields['categories'].choices = [['', 'Select category']] + self.client.categories
+        self.fields['archive'].choices = self.client.archives
+
 
     def clean_year(self):
         value = self.cleaned_data.get('year')
@@ -128,44 +128,44 @@ class EditForm(forms.ModelForm):
             self.add_error('is_decennary', 'Remove day/month values if it is decennary')
 
     def save(self, commit=True):
-        update_connections = False
+        # update_connections = False
         self.cleaned_data.update({
-            'file_name': self.img_file.file_name
+            'file_name': self.img_file.file_name if getattr(self, 'img_file', False) else self.initial['file_name']
         })
         try:
-            if self.instance.api_id:
-                update_connections = True
+            # if self.instance.api_id:
+            #     update_connections = True
             resp = self.client.update_visor(self.instance.api_id, **self.cleaned_data)
-            if update_connections:
-                tags_to_delete = set(self.initial['tags']) - set(self.cleaned_data['tags'])
-                tags_to_add = set(self.cleaned_data['tags']) - set(self.initial['tags'])
-
-                for tag in tags_to_add:
-                    self.client.add_tag_to_visor(self.instance.api_id, tag)
-
-                for tag in tags_to_delete:
-                    self.client.delete_tag_from_visor(self.instance.api_id, tag)
-
-                categories_to_delete = set(self.initial['categories']) - set(self.cleaned_data['categories'])
-                categories_to_add = set(self.cleaned_data['categories']) - set(self.initial['categories'])
-
-                for category in categories_to_add:
-                    self.client.add_category_to_visor(self.instance.api_id, category)
-
-                for category in categories_to_delete:
-                    self.client.delete_category_from_visor(self.instance.api_id, category)
-
-                # TODO: Place - make many places
+            # if update_connections:
+            #     tags_to_delete = set(self.initial['tags']) - set(self.cleaned_data['tags'])
+            #     tags_to_add = set(self.cleaned_data['tags']) - set(self.initial['tags'])
+            #
+            #     for tag in tags_to_add:
+            #         self.client.add_tag_to_visor(self.instance.api_id, tag)
+            #
+            #     for tag in tags_to_delete:
+            #         self.client.delete_tag_from_visor(self.instance.api_id, tag)
+            #
+            #     categories_to_delete = set(self.initial['categories']) - set(self.cleaned_data['categories'])
+            #     categories_to_add = set(self.cleaned_data['categories']) - set(self.initial['categories'])
+            #
+            #     for category in categories_to_add:
+            #         self.client.add_category_to_visor(self.instance.api_id, category)
+            #
+            #     for category in categories_to_delete:
+            #         self.client.delete_category_from_visor(self.instance.api_id, category)
 
         except (APIUpdateError, APICategoryError, APITagError, APIPlaceError) as e:
             self.request.session['msg'] = str(e)
         else:
-            super(EditForm, self).save(commit=commit)
-            self.instance.api_id = resp['_key']
-            self.instance.save()
-        self.instance.img_file.color = self.cleaned_data['color']
-        self.instance.img_file.orientation = self.cleaned_data['orientation']
-        self.instance.img_file.save()
-        self.instance.mark_as_completed()
+            if getattr(self, 'img_file', False):
+                super(EditForm, self).save(commit=commit)
+                self.instance.api_id = resp['_key']
+                self.instance.save()
+        if getattr(self, 'img_file', False):
+            self.instance.img_file.color = self.cleaned_data['color']
+            self.instance.img_file.orientation = self.cleaned_data['orientation']
+            self.instance.img_file.save()
+            self.instance.mark_as_completed()
 
         return self.instance

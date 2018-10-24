@@ -1,7 +1,11 @@
 import json
 import requests
+from datetime import datetime
 
 from django.conf import settings
+
+class APIError(Exception):
+    pass
 
 
 class APIUpdateError(Exception):
@@ -90,19 +94,48 @@ class APIClient:
             payload.update({'Anno': '{}'.format(data['year'])})
         if data.get('is_decennary'):
             payload.update({'Decennio': 'S'})
-        if create and data.get('place'):
+        if data.get('place'):
             payload.update({
                 'Luogo': data['place']
             })
-        if create and data.get('tags'):
+        if data.get('tags'):
             payload.update({
                 'Tags': "|".join(data['tags'])
             })
-        if create and data.get('categories'):
+        if data.get('categories'):
             payload.update({
                 'Categoria': ";".join(data['categories'])
             })
         return payload
+
+    def _convert_api_data(self, **data):
+        if data.get('Data'):
+            date = datetime.strptime(data['Data'], '%Y-%m-%d')
+            day, month, year = date.day, date.month, date.year
+        else:
+            day = month = year = None
+        return {
+            'archive': data.get('Archivio'),
+            'color': data.get('Colore'),
+            'place': data.get('Luogo', {}).get('_key'),
+            'year': year or data.get('Anno'),
+            'file_name': data.get('File'),
+            'api_id': data.get('_key'),
+            'creative': data.get('Creative'),
+            'scope': 'S' if data.get('Utenza', '0') == 1 else 'N',
+            'title': data.get('Nome'),
+            'tags': data.get('Tags'),
+            'is_decennary': True if data.get('Decennio', 'N') == 'S' else False,
+            'day': day,
+            'month': month,
+            'short_description': data.get('DescBreve'),
+            'full_description': data.get('DescLunga'),
+            'support': data.get('Supporto'),
+            'note': data.get('Note'),
+            'rating': data.get('Rating'),
+            'orientation': data.get('Orientamento'),
+            'categories': data.get('Categoria')
+        }
 
     def create_tag(self, value):
         res = self._make_request("in_t", data={"Nome": value})
@@ -126,13 +159,25 @@ class APIClient:
         resp = self._make_request(op, data=prepared_data)
         if 'IN DATA' in resp:
             raise APIUpdateError(resp)
+        if 'ERR INS VISOR' in resp:
+            raise APIUpdateError(resp)
+        if 'ERR MOD VISOR' in resp:
+            raise APIUpdateError(resp)
         return resp
 
-    def get_file(self, filename):
+    def get_file(self, filename, get_content=False):
         resp = self._make_request('vk_v', data={'File': filename})
         if resp == 'NO VISOR KEY':
-            return None
-        return resp
+            return {}
+        if get_content:
+            try:
+                return self._convert_api_data(
+                    **self._make_request('dt_v', data={'visor': resp})
+                )
+            except Exception as exc:
+                raise APIError(exc)
+        else:
+            return {'_key': resp}
 
     def delete_visor(self, key):
         op = "dl_v"

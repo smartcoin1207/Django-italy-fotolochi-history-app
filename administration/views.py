@@ -76,9 +76,24 @@ class Edit(LoginRequiredMixin, UpdateView):
     form_class = EditForm
     queryset = ImageData.objects.select_related('img_file').all()
     success_url = reverse_lazy('administration:list')
+    pk_url_kwarg = 'file_name'
+
+    def get_object(self, queryset=None):
+        if not queryset:
+            queryset = self.get_queryset()
+        file_name = self.kwargs.get(self.pk_url_kwarg)
+        try:
+            return queryset.get(img_file__file_name=file_name)
+        except ImageData.DoesNotExist:
+            pass
+        return None
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        file_name = self.kwargs.get(self.pk_url_kwarg)
+        client = APIClient()
+        kwargs['initial'].update(client.get_file(file_name, get_content=True))
+        kwargs['initial'].update({'file_name': file_name})
         kwargs.update({'request': self.request})
         return kwargs
 
