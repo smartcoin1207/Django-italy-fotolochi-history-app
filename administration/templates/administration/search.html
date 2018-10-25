@@ -52,7 +52,7 @@
             {% for row in list %}
             <tr>
                 <td><a href="{% url 'administration:edit' file_name=row.file_name %}"><img
-                        src="/media/thumb_{{ row.file_name }}" onerror="this.src={% static 'img/header-logo.png' %}"
+                        src="/media/thumb/thumb_{{ row.file_name }}" onerror="this.src={% static 'img/header-logo.png' %}"
                         alt="{{ row.file_name }}" data-object-fit="contain"></a></td>
                 <td><a href="{% url 'administration:edit' file_name=row.file_name %}">{{ row.title }}</a></td>
                 <td><a href="{% url 'administration:edit' file_name=row.file_name %}">{{ row.file_name }}</a></td>
