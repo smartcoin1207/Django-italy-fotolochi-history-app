@@ -10,7 +10,7 @@ from os.path import isfile, join
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, reverse
+from django.shortcuts import redirect, reverse, render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views import View
@@ -104,6 +104,19 @@ class TagView(LoginRequiredMixin, View):
         client = APIClient()
         res = client.create_tag(request.POST['input'])
         return JsonResponse({'id': res, 'value': res})
+
+
+class SearchView(LoginRequiredMixin, View):
+
+    template_name = 'administration/search.html'
+
+    def get(self, request, *args, **kwargs):
+        if 'file' not in request.GET:
+            return HttpResponseRedirect(reverse_lazy('administration:list'))
+        filename = request.GET['file']
+        client = APIClient()
+        data = client.search(filename)
+        return render(request, self.template_name, {'search_value': filename, 'list': data})
 
 # class Delete(LoginRequiredMixin, DeleteView):
 #     success_url = reverse_lazy('administration:list')

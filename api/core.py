@@ -53,6 +53,9 @@ class APIClient:
             raise APIUpdateError(resp.content)
         if resp.json() in ['NO FILE', 'NO DATA', 'NO CMD', 'NO VISOR']:
             raise APIUpdateError('Update failed {}'.format(resp.json()))
+        # XXX: hack to replace search call
+        if op == 'ls_v' and 'WRONG VISOR FILENAME' in resp.json():
+            return []
         return resp.json()
 
     def _cache(self, item, func):
@@ -157,6 +160,7 @@ class APIClient:
         else:
             prepared_data = self._prepare_form_data(**data)
         resp = self._make_request(op, data=prepared_data)
+
         if 'IN DATA' in resp:
             raise APIUpdateError(resp)
         if 'ERR INS VISOR' in resp:
@@ -178,6 +182,19 @@ class APIClient:
                 raise APIError(exc)
         else:
             return {'_key': resp}
+
+    def search(self, value):
+        # TODO: Add pagination?
+        op = 'ls_v'
+        if value.startswith('V'):
+            # TODO: look for key (add check for integer rest)
+            return [self._convert_api_data(**i) for i in self._make_request(op, data={'key': value})]
+        else:
+            results = []
+            for i in ['name', 'file']:
+                results.extend([self._convert_api_data(**i) for i in self._make_request(op, data={i: value})])
+
+            return results
 
     def delete_visor(self, key):
         op = "dl_v"

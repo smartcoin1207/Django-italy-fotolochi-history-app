@@ -55,11 +55,11 @@ def import_file(file_path, file_name, file_info=None):
     ext_original = file_name
     original.save(os.path.join(settings.ORIGINAL_ROOT, ext_original))
 
-    ext_thumb = hash_file_name(thumb_name)
+    ext_thumb = thumb_name
     thumb = resize(file_path, os.path.join(settings.THUMB_ROOT, ext_thumb), settings.MIN_THUMB_SIZE)
     # thumb = resize_and_crop(file_path, os.path.join(settings.THUMB_ROOT, ext_thumb), size=(128, 128))
 
-    ext_prev = hash_file_name(preview_name)
+    ext_prev = preview_name
     preview = make_preview(file_path, os.path.join(settings.PREVIEW_ROOT, ext_prev), size=(1000, 1000))
 
     if not preview:
