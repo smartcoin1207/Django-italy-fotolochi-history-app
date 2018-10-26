@@ -52,7 +52,7 @@
                         src="/media/{{ row.img_file.thumb_name }}" alt="current img" data-object-fit="contain"></a></td>
                 <td><a href="{% url 'administration:edit' file_name=row.img_file.file_name %}">{{ row.title }}</a></td>
                 <td><a href="{% url 'administration:edit' file_name=row.img_file.file_name %}">{{ row.img_file.file_name}}</a></td>
-                <td>No</td>
+                <td>{% if row.api_id %}Yes{% else %}No{% endif %}</td>
                 <td>
                     <a class="button" href="{% url 'administration:edit' file_name=row.img_file.file_name %}">
                         <span class="icon"><i class="fas fa-edit" aria-hidden="true"></i></span>
@@ -85,8 +85,8 @@
         <!--<a class="pagination-link" aria-label="Goto page 45">45</a>-->
         <!--</li>-->
         <li>
-            <a class="pagination-link is-current" aria-label="Page {{ page_obj.number }}" aria-current="page">{{
-                page_obj.number }}</a>
+            <a class="pagination-link is-current" aria-label="Page {{ page_obj.number }}" aria-current="page">
+                {{ page_obj.number }}</a>
         </li>
         <!--<li>-->
         <!--<a class="pagination-link" aria-label="Goto page 47">47</a>-->
