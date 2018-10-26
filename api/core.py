@@ -4,6 +4,15 @@ from datetime import datetime
 
 from django.conf import settings
 
+
+def is_integer(s):
+    try:
+        int(s)
+    except:
+        return False
+    return True
+
+
 class APIError(Exception):
     pass
 
@@ -54,7 +63,7 @@ class APIClient:
         if resp.json() in ['NO FILE', 'NO DATA', 'NO CMD', 'NO VISOR']:
             raise APIUpdateError('Update failed {}'.format(resp.json()))
         # XXX: hack to replace search call
-        if op == 'ls_v' and 'WRONG VISOR FILENAME' in resp.json():
+        if op == 'ls_v' and 'WRONG VISOR' in resp.json():
             return []
         return resp.json()
 
@@ -186,15 +195,15 @@ class APIClient:
     def search(self, value):
         # TODO: Add pagination?
         op = 'ls_v'
-        if value.startswith('V'):
-            # TODO: look for key (add check for integer rest)
+        # Check for V00000 pattern
+        if value.startswith('V') and is_integer(value[1:]):
             return [self._convert_api_data(**i) for i in self._make_request(op, data={'key': value})]
         else:
             results = []
             for i in ['name', 'file']:
                 results.extend([self._convert_api_data(**i) for i in self._make_request(op, data={i: value})])
-
-            return results
+            # TODO: make this configurable
+            return results[:100]
 
     def delete_visor(self, key):
         op = "dl_v"
