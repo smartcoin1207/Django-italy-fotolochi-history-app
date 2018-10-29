@@ -155,8 +155,9 @@ class APIClient:
 
     @property
     def archives(self):
-        # TODO: Add real response?
-        return [('Pic', 'Pic'), ('Other', 'Other')]
+        # return [('Pic', 'Pic'), ('Other', 'Other')]
+        resp = self._make_request("ls_a")
+        return zip(resp, resp)
 
     def update_visor(self, key, **data):
         op = "in_v"
