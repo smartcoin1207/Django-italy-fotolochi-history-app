@@ -21,9 +21,9 @@
     <div class="columns">
         <div class="column is-narrow is-offset-2">
             <div class="fotolocchi-side-img">
-                <span class="fotolocchi-side-img-title">File: {{ form.img_file.file_name }}</span>
+                <span class="fotolocchi-side-img-title">File: {{ form.initial.file_name }}</span>
                 <figure class="image">
-                    <img src="/media/preview/prev_{{ row.file_name }}"/>
+                    <img src="/media/preview/prev_{{ form.initial.file_name }}"/>
                 </figure>
             </div>
             <div class="field">
