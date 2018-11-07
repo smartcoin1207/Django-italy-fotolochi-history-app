@@ -14,6 +14,16 @@ ORIENTATION_CHOICES = [
 ]
 ORIENTATIONS = dict(ORIENTATION_CHOICES)
 
+ROTATIONS = {
+    1: 0,
+    2: 0,
+    3: 180,
+    4: 180,
+    5: -90,
+    6: -90,
+    7: 90,
+    8: 90
+}
 
 BW = 'B/N'
 COLOR = 'C'
@@ -53,6 +63,58 @@ def check_orientation(file):
     else:
         orientation = VERTICAL
     return orientation
+
+
+def rotate(img_path, rotation):
+    """
+    Rotates img based on rotation value (EXIF info does not get changed)
+    :param img_path: initial image path
+    :param rotation: integer number 1-8
+    :return: True/False depending if rotation was applied
+    """
+    image = Image.open(img_path)
+    if rotation not in ROTATIONS:
+        return False
+    angle = ROTATIONS[rotation]
+    if not angle:
+        return True
+    image = image.rotate(angle, expand=True)
+    image.save(img_path)
+    return True
+
+
+def get_rotation(img_path):
+    image = Image.open(img_path)
+    return image._getexif().get(274, 0)
+
+
+def resize(img_path, modified_path, min_size):
+    """
+    Resize image to the min size for the minimum side
+    :param img_path: initial image path
+    :param modified_path: thumbnail path
+    :param min_size: size in pixels of a lesser side of a thumbnail
+    :return: True
+    """
+    img = Image.open(img_path)
+    # Get current and desired ratio for the images
+    width, height = img.size
+    # Define new width and height depending on which side is lesser
+    if width > height:
+        img_ratio = height / ( 1.0 * min_size )
+        new_width = int(width / img_ratio)
+        new_height = min_size
+    elif width < height:
+        img_ratio = width / (1.0 * min_size)
+        new_height = int(height / img_ratio)
+        new_width = min_size
+    else:
+        new_width = new_height = min_size
+
+    img = img.resize((new_width, new_height),
+                     Image.ANTIALIAS)
+    img.save(modified_path)
+    return True
 
 
 def resize_and_crop(img_path, modified_path, size, crop_type='top'):

@@ -25,6 +25,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.24.1",
     "babel-preset-react": "^6.24.1",
+    "bulma-divider": "^2.0.1",
     "clean-webpack-plugin": "^0.1.19",
     "css-loader": "^1.0.0",
     "jquery": "^3.3.1",

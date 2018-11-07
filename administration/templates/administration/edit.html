@@ -21,9 +21,9 @@
     <div class="columns">
         <div class="column is-narrow is-offset-2">
             <div class="fotolocchi-side-img">
-                File: {{ form.img_file.file_name }}
+                <span class="fotolocchi-side-img-title">File: {{ form.img_file.file_name }}</span>
                 <figure class="image">
-                    <img src="/media/{{ form.img_file.preview_name }}"/>
+                    <img src="/media/preview/prev_{{ row.file_name }}"/>
                 </figure>
             </div>
             <div class="field">
@@ -75,8 +75,8 @@
             </div>
 
             <div class="field">
-                <label class="label">Note</label>
-                <div class="control">
+                <label class="label is-greyed">Note</label>
+                <div class="control is-greyed">
                     {{ form.notes }}
                 </div>
             </div>
@@ -93,6 +93,7 @@
                             {% if form.day.errors %}
                             <p class="help is-danger">{% for error in form.day.errors %}{{ error }}{% endfor %}</p>
                             {% endif %}
+                            &nbsp;
                             <p class="control">
                                 {{ form.month }}
                             </p>
@@ -114,29 +115,16 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="column">
-                    <div class="field">
-
-                            <label class="label">Decade</label>
-
-                        <p class="control">
-                            {{ form.is_decennary }}
-                        </p>
-                        {% if form.is_decennary.errors %}
-                        <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
-                        {% endif %}
-                    </div>
-                </div>
             </div>
 
-
             <div class="field">
-                <div class="control">
-                    <label class="label">Supporto</label>
-                    <div class="select">
-                        {{ form.support }}
-                    </div>
-                </div>
+                <label class="checkbox label">
+                    {{ form.is_decennary }}
+                    Decade
+                </label>
+                {% if form.is_decennary.errors %}
+                <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
             </div>
 
             <div class="field">
@@ -147,6 +135,17 @@
                 {% if form.place.errors %}
                 <p class="help is-danger">{% for error in form.place.errors %}{{ error }}{% endfor %}</p>
                 {% endif %}
+            </div>
+
+            <div class="is-divider"></div>
+
+            <div class="field">
+                <div class="control">
+                    <label class="label">Supporto</label>
+                    <div class="select">
+                        {{ form.support }}
+                    </div>
+                </div>
             </div>
 
             <div class="field">
@@ -179,6 +178,8 @@
                 {% endif %}
             </div>
 
+            <div class="is-divider"></div>
+
             <div class="field">
                 <div class="control">
                     <label class="label">Archivio</label>
@@ -192,17 +193,7 @@
             </div>
 
             <div class="field">
-                <label class="label">Creative</label>
-                <div class="control">
-                    {{ form.creative }}
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="label">Is publish</label>
-                <div class="control">
-                    {{ form.is_publish }}
-                </div>
+                <label class="label checkbox">{{ form.creative }}&nbsp;Creative</label>
             </div>
 
             <div class="field">
@@ -212,12 +203,18 @@
                 </div>
             </div>
 
-            <div class="field is-grouped">
+            <div class="field">
+                <label class="checkbox label">
+                    {{ form.is_publish }}&nbsp;Public
+                </label>
+            </div>
+
+            <div class="field is-grouped has-top-margin">
                 <div class="control">
-                    <button class="button is-link">Submit</button>
+                    <button class="button is-large is-black">Aggiungi/Modifica immagine</button>
                 </div>
                 <div class="control">
-                    <button class="button is-text">Cancel</button>
+                    <button class="button is-text is-large">Cancel</button>
                 </div>
             </div>
         </div>

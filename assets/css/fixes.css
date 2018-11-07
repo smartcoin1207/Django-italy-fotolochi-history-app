@@ -1,3 +1,11 @@
+# Selectize
+
+.selectize-dropdown-content .active strong {
+    font-size: 50px;
+}
+
+
+# Bar
 .br-theme-bars-square .br-widget {
     height: 35px;
 }
@@ -9,22 +17,31 @@
 
 .br-theme-bars-square .br-widget a.br-selected {
     border-color: black;
-    color: black;
+    background-color: black;
+    color: white;
 }
 
 .br-theme-bars-square .br-widget a.br-active {
     border-color: black;
-    color: black;
+    background-color: black;
+    color: white;
 }
 
 .br-theme-bars-square .br-widget a.br-current {
     border-color: black;
-    color: black;
+    background-color: black;
+    color: white;
 }
 
 .fotolocchi-side-img {
     width: 250px;
     margin: 20px 0 35px 0;
+}
+
+.fotolocchi-side-img-title {
+    font-weight: bold;
+    display: block;
+    margin: 0 0 10px 0;
 }
 
 .input {
@@ -41,4 +58,29 @@
 
 .select select {
     border-color: black;
+}
+
+.navbar {
+    background-color: #f5f5f5;
+    padding: 0 15px 0 15px;
+}
+
+.navbar-item img {
+    max-height: 3.75rem;
+}
+
+thead {
+    background-color: #f5f5f5;
+}
+
+.is-greyed {
+    color: #dbdbdb;
+}
+
+.is-greyed > .textarea {
+    border-color: #dbdbdb;
+}
+
+.has-top-margin {
+    margin-top: 35px;
 }

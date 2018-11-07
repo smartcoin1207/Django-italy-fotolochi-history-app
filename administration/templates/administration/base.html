@@ -16,9 +16,7 @@
         <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
     </head>
     <body id="app">
-        <section class="section">
-            <div class="container">
-                <nav class="navbar" role="navigation" aria-label="main navigation">
+        <nav class="navbar is-light" role="navigation" aria-label="main navigation">
                     <div class="navbar-brand">
                         <a class="navbar-item" href="/">
                             <img src="{% static 'img/header-logo.png' %}" alt="Foto Locchi" />
@@ -40,12 +38,12 @@
                         </div>
                     </div>
                 </nav>
-                {% block main %}{% endblock %}
-            </div>
-            <div class="container">
-                {% block pagination %}{% endblock %}
-            </div>
-        </section>
+        <div class="container">
+            {% block main %}{% endblock %}
+        </div>
+        <div class="container">
+            {% block pagination %}{% endblock %}
+        </div>
         {% render_bundle 'main' 'js' %}
         <!--{% block post_js %}{% endblock %}-->
     </body>

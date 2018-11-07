@@ -1,5 +1,7 @@
 {% extends "administration/base.html" %}
 
+{% load static %}
+
 {% csrf_token %}
 
 {% block navbar %}
@@ -20,7 +22,8 @@
             <form method="get" action="{% url 'administration:search' %}">
                 <div class="field has-addons">
                     <div class="control is-expanded">
-                        <input class="input" type="text" name="file" placeholder="Cerca file">
+                        <input class="input" type="text" name="file" placeholder="Cerca file"
+                               value="{{ search_value }}">
                     </div>
                     <div class="control">
                         <button type="submit" class="button is-black">
@@ -48,13 +51,14 @@
 
             {% for row in list %}
             <tr>
-                <td><a href="{% url 'administration:edit' file_name=row.img_file.file_name %}"><img
-                        src="/media/{{ row.img_file.thumb_name }}" alt="current img" data-object-fit="contain"></a></td>
-                <td><a href="{% url 'administration:edit' file_name=row.img_file.file_name %}">{{ row.title }}</a></td>
-                <td><a href="{% url 'administration:edit' file_name=row.img_file.file_name %}">{{ row.img_file.file_name}}</a></td>
-                <td>{% if row.api_id %}Yes{% else %}No{% endif %}</td>
+                <td><a href="{% url 'administration:edit' file_name=row.file_name %}"><img
+                        src="/media/thumb/thumb_{{ row.file_name }}" onerror="this.src={% static 'img/header-logo.png' %}"
+                        alt="{{ row.file_name }}" data-object-fit="contain"></a></td>
+                <td><a href="{% url 'administration:edit' file_name=row.file_name %}">{{ row.title }}</a></td>
+                <td><a href="{% url 'administration:edit' file_name=row.file_name %}">{{ row.file_name }}</a></td>
+                <td>Yes</td>
                 <td>
-                    <a class="button" href="{% url 'administration:edit' file_name=row.img_file.file_name %}">
+                    <a class="button" href="{% url 'administration:edit' file_name=row.file_name %}">
                         <span class="icon"><i class="fas fa-edit" aria-hidden="true"></i></span>
                     </a>
                 </td>
