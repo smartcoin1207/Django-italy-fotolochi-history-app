@@ -51,14 +51,18 @@ $( function () {
   $(".delete-button").on("click", function(e) {
     e.preventDefault();
     if (confirm('Are you sure?')) {
-        console.log( $( this ).attr('href') );
         $.post({
             url: $( this ).attr('href'),
             xhrFields: {
               withCredentials: true
            }
         }).done(function(data) {
-           location.reload(true);
+           if ('url' in data) {
+             location.replace(data['url']);
+           }
+           if ('error' in data) {
+             alert(data['error']);
+           }
         });
     }
   });

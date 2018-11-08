@@ -16,7 +16,7 @@ from django.http import HttpResponseRedirect, JsonResponse
 from django.views import View
 from django.views.generic import UpdateView, ListView, DeleteView
 
-from .api import APIDeleteError, delete_image_data, APIClient, import_file
+from .api import APIDeleteError, delete_visor, APIClient, import_file
 
 
 from .forms import EditForm
@@ -118,16 +118,14 @@ class SearchView(LoginRequiredMixin, View):
         data = client.search(filename)
         return render(request, self.template_name, {'search_value': filename, 'list': data})
 
-# class Delete(LoginRequiredMixin, DeleteView):
-#     success_url = reverse_lazy('administration:list')
-#     queryset = ImageData.objects.select_related('img_file').all()
-#
-#     def delete(self, request, *args, **kwargs):
-#         self.object = self.get_object()
-#         success_url = self.get_success_url()
-#         try:
-#             delete_image_data(self.object)
-#         except APIDeleteError as e:
-#             return JsonResponse({'error': str(e)})
-#
-#         return HttpResponseRedirect(success_url)
+class Delete(LoginRequiredMixin, DeleteView):
+    success_url = reverse_lazy('administration:list')
+
+    def delete(self, request, *args, **kwargs):
+        success_url = self.success_url
+        try:
+            delete_visor(self.kwargs['file_name'])
+        except APIDeleteError as e:
+            return JsonResponse({'error': str(e)})
+
+        return JsonResponse({'url': success_url})

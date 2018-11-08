@@ -20,19 +20,26 @@ class APIDeleteError(Exception):
     pass
 
 
-def delete_image_data(image_data):
-    if not image_data.api_id:
-        return image_data.delete()
+def delete_visor(file_name):
+    try:
+        image_data = ImageData.objects.get(img_file__file_name=file_name)
+    except ImageData.DoesNotExist:
+        image_data = None
+
+    if image_data:
+        image_data.delete()
 
     client = APIClient()
     try:
-        res = client.delete_visor(image_data.api_id)
-    except APIUpdateError as e:
-        raise APIDeleteError('File \'{}\' could not be deleted'.format(image_data.title))
+        visor = client.get_file(file_name)
+        res = client.delete_visor(visor['_key'])
+    except APIUpdateError:
+        raise APIDeleteError('File \'{}\' could not be deleted'.format(file_name))
+    except KeyError:
+        raise APIDeleteError('File \'{}\' not found in api'.format(file_name))
     else:
         if not res:
-            raise APIDeleteError('File \'{}\' could not be deleted'.format(image_data.title))
-        return image_data.delete()
+            raise APIDeleteError('File \'{}\' could not be deleted'.format(file_name))
 
 
 def import_file(file_path, file_name, file_info=None):

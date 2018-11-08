@@ -214,7 +214,7 @@
                     <button class="button is-large is-black">Aggiungi/Modifica immagine</button>
                 </div>
                 <div class="control">
-                    <a class="button is-text is-large">Delete</a>
+                    <a class="button is-text is-large delete-button" href="{% url 'administration:delete' file_name=form.initial.file_name %}">Delete</a>
                 </div>
             </div>
         </div>
