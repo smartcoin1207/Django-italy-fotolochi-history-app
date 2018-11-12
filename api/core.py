@@ -153,6 +153,18 @@ class APIClient:
         res = self._make_request("in_t", data={"Nome": value})
         return res
 
+    def create_category(self, parent, name):
+        res = self._make_request("in_c", data={"parent": parent, "Nome": name})
+        return res
+
+    def create_place(self, name):
+        res = self._make_request("in_l", data={"Nome": name})
+        return res
+
+    def create_archive(self, name):
+        res = self._make_request("in_a", data={"Nome": name})
+        return res
+
     @property
     def archives(self):
         # return [('Pic', 'Pic'), ('Other', 'Other')]

@@ -14,12 +14,12 @@ from django.shortcuts import redirect, reverse, render
 from django.urls import reverse_lazy
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views import View
-from django.views.generic import UpdateView, ListView, DeleteView
+from django.views.generic import UpdateView, ListView, DeleteView, TemplateView, CreateView, FormView
 
 from .api import APIDeleteError, delete_visor, APIClient, import_file
 
 
-from .forms import EditForm
+from .forms import EditForm, CategoryForm, PlaceForm, ArchiveForm
 from .models import ImageData, ImageFile
 
 
@@ -129,3 +129,68 @@ class Delete(LoginRequiredMixin, DeleteView):
             return JsonResponse({'error': str(e)})
 
         return JsonResponse({'url': success_url})
+
+
+class TaxonomyView(LoginRequiredMixin, TemplateView):
+    template_name = 'administration/taxonomy.html'
+
+    def get_context_data(self, **kwargs):
+        ctx = super(TaxonomyView, self).get_context_data(**kwargs)
+        ctx.update({
+            'category_form': CategoryForm(),
+            'place_form': PlaceForm(),
+            'archive_form': ArchiveForm(),
+            'msg': self.request.session.pop('msg', None)
+        })
+        return ctx
+
+
+class AddCategoryView(LoginRequiredMixin, CreateView):
+
+    def get(self, *args, **kwargs):
+        return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
+
+    def post(self, request, *args, **kwargs):
+        form = CategoryForm(data=request.POST)
+        if form.is_valid():
+            result = form.save()
+            self.request.session['msg'] = 'La categoria {} e\' stata aggiunta'.format(result)
+            return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
+        else:
+            return render(request, 'administration/taxonomy.html', {
+                'category_form': form, 'msg': request.session.pop('msg', None)
+            })
+
+
+class AddPlaceView(LoginRequiredMixin, CreateView):
+
+    def get(self, *args, **kwargs):
+        return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
+
+    def post(self, request, *args, **kwargs):
+        form = PlaceForm(data=request.POST)
+        if form.is_valid():
+            result = form.save()
+            self.request.session['msg'] = 'Location {} e\' stata aggiunta'.format(result['Nome'])
+            return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
+        else:
+            return render(request, 'administration/taxonomy.html', {
+                'place_form': form, 'msg': request.session.pop('msg', None)
+            })
+
+
+class AddArchiveView(LoginRequiredMixin, CreateView):
+
+    def get(self, *args, **kwargs):
+        return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
+
+    def post(self, request, *args, **kwargs):
+        form = ArchiveForm(data=request.POST)
+        if form.is_valid():
+            result = form.save()
+            self.request.session['msg'] = 'L\'archivio {} e\' stato aggiunto'.format(result['Nome'])
+            return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
+        else:
+            return render(request, 'administration/taxonomy.html', {
+                'archive_form': form, 'msg': request.session.pop('msg', None)
+            })

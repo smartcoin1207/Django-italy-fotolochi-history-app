@@ -7,6 +7,43 @@ from .helpers import COLOR_CHOICES, ORIENTATION_CHOICES, SUPPORT_CHOICES
 from api.core import APIClient, APIUpdateError, APICategoryError, APITagError, APIPlaceError
 
 
+class CategoryForm(forms.Form):
+    name = forms.CharField()
+    parent = forms.ChoiceField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(CategoryForm, self).__init__(*args, **kwargs)
+        self.client = APIClient()
+        self.fields['parent'].choices = [['', 'Root category']] + self.client.categories
+
+    def save(self):
+        res = self.client.create_category(self.cleaned_data['parent'], self.cleaned_data['name'])
+        return res
+
+
+class PlaceForm(forms.Form):
+    name = forms.CharField()
+    parent = forms.ChoiceField(required=False)
+
+    def __init__(self, *args, **kwargs):
+        super(PlaceForm, self).__init__(*args, **kwargs)
+        self.client = APIClient()
+        self.fields['parent'].choices = [['', 'Root place']] + self.client.places
+
+    def save(self):
+        res = self.client.create_place(self.cleaned_data['name'])
+        return res
+
+
+class ArchiveForm(forms.Form):
+    name = forms.CharField()
+
+    def save(self):
+        res = self.client.create_archive(self.cleaned_data['name'])
+        return res
+
+
+
 class EditForm(forms.ModelForm):
 
     # preview = forms.CharField(
