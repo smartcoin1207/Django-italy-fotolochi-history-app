@@ -188,7 +188,7 @@ class AddArchiveView(LoginRequiredMixin, CreateView):
         form = ArchiveForm(data=request.POST)
         if form.is_valid():
             result = form.save()
-            self.request.session['msg'] = 'L\'archivio {} e\' stato aggiunto'.format(result['Nome'])
+            self.request.session['msg'] = 'L\'archivio {} e\' stato aggiunto'.format(result)
             return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
         else:
             return render(request, 'administration/taxonomy.html', {
