@@ -38,6 +38,10 @@ class PlaceForm(forms.Form):
 class ArchiveForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
 
+    def __init__(self, *args, **kwargs):
+        super(ArchiveForm, self).__init__(*args, **kwargs)
+        self.client = APIClient()
+
     def save(self):
         res = self.client.create_archive(self.cleaned_data['name'])
         return res
