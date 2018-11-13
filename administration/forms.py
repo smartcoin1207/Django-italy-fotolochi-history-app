@@ -9,7 +9,7 @@ from api.core import APIClient, APIUpdateError, APICategoryError, APITagError, A
 
 class CategoryForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
-    parent = forms.ChoiceField(required=True)
+    parent = forms.ChoiceField(widget=forms.Select(attrs={'id': 'id_categories'}), required=True)
 
     def __init__(self, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)
@@ -23,7 +23,7 @@ class CategoryForm(forms.Form):
 
 class PlaceForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
-    parent = forms.ChoiceField(required=False)
+    parent = forms.ChoiceField(widget=forms.Select(attrs={'id': 'id_place'}), required=False)
 
     def __init__(self, *args, **kwargs):
         super(PlaceForm, self).__init__(*args, **kwargs)
