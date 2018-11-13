@@ -21,67 +21,81 @@
     <p style="color: green; background-color: #f5f5f5;">{{ msg }}</p>
 {% endif %}
 <div class="columns">
+    <form action="{% url 'administration:add-category' %}" method="post">
+    {% csrf_token %}
     <div class="column">
-        <form action="{% url 'administration:add-category' %}" method="post">
-        {% csrf_token %}
-        <div class="field">
-            <label class="label">Parent category</label>
-            <div class="control">
-                {{ category_form.parent }}
+        <div class="columns">
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label">Parent category</label>
+                    <div class="select">
+                        {{ category_form.parent }}
+                    </div>
+                    {% if category_form.parent.errors %}
+                    <p class="help is-danger">{% for error in category_form.parent.errors %}{{ error }}{% endfor %}</p>
+                    {% endif %}
+                </div>
             </div>
-            {% if category_form.parent.errors %}
-            <p class="help is-danger">{% for error in category_form.parent.errors %}{{ error }}{% endfor %}</p>
-            {% endif %}
-        </div>
-        <div class="field">
-            <label class="label">Nome</label>
-            <div class="control">
-                {{ category_form.name }}
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label">Nome</label>
+                    <div class="control">
+                        {{ category_form.name }}
+                    </div>
+                    {% if category_form.name.errors %}
+                    <p class="help is-danger">{% for error in category_form.name.errors %}{{ error }}{% endfor %}</p>
+                    {% endif %}
+                </div>
             </div>
-            {% if category_form.name.errors %}
-            <p class="help is-danger">{% for error in category_form.name.errors %}{{ error }}{% endfor %}</p>
-            {% endif %}
         </div>
-        <div class="field is-grouped has-top-margin">
+        <div class="field is-grouped">
             <div class="control">
                 <button class="button is-black">Aggiungi category</button>
             </div>
         </div>
-        </form>
     </div>
+    </form>
 </div>
+<div class="is-divider"></div>
 <div class="columns">
+    <form action="{% url 'administration:add-place' %}" method="post">
+    {% csrf_token %}
     <div class="column">
-        <form action="{% url 'administration:add-place' %}" method="post">
-        {% csrf_token %}
-        <div class="field">
-            <label class="label">Parent location</label>
-            <div class="control">
-                {{ place_form.parent }}
+        <div class="columns">
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label">Parent location</label>
+                    <div class="select">
+                        {{ place_form.parent }}
+                    </div>
+                    {% if place_form.parent.errors %}
+                    <p class="help is-danger">{% for error in place_form.parent.errors %}{{ error }}{% endfor %}</p>
+                    {% endif %}
+                </div>
             </div>
-            {% if place_form.parent.errors %}
-            <p class="help is-danger">{% for error in place_form.parent.errors %}{{ error }}{% endfor %}</p>
-            {% endif %}
-        </div>
-        <div class="field">
-            <label class="label">Nome</label>
-            <div class="control">
-                {{ place_form.name }}
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label">Nome</label>
+                    <div class="control">
+                        {{ place_form.name }}
+                    </div>
+                    {% if place_form.name.errors %}
+                    <p class="help is-danger">{% for error in place_form.name.errors %}{{ error }}{% endfor %}</p>
+                    {% endif %}
+                </div>
             </div>
-            {% if place_form.name.errors %}
-            <p class="help is-danger">{% for error in place_form.name.errors %}{{ error }}{% endfor %}</p>
-            {% endif %}
         </div>
-        <div class="field is-grouped has-top-margin">
+        <div class="field is-grouped">
             <div class="control">
                 <button class="button is-black">Aggiungi location</button>
             </div>
         </div>
-        </form>
     </div>
+    </form>
 </div>
+<div class="is-divider"></div>
 <div class="columns">
-    <div class="column">
+    <div class="column is-half">
         <form action="{% url 'administration:add-archive' %}" method="post">
         {% csrf_token %}
         <div class="field">

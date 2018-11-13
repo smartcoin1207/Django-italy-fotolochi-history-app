@@ -154,7 +154,7 @@ class AddCategoryView(LoginRequiredMixin, CreateView):
         form = CategoryForm(data=request.POST)
         if form.is_valid():
             result = form.save()
-            self.request.session['msg'] = 'La categoria {} e\' stata aggiunta'.format(result)
+            self.request.session['msg'] = 'La categoria {} e\' stata aggiunta'.format(result['Name'])
             return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
         else:
             return render(request, 'administration/taxonomy.html', {

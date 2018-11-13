@@ -154,7 +154,7 @@ class APIClient:
         return res
 
     def create_category(self, parent, name):
-        res = self._make_request("in_c", data={"parent": parent, "Nome": name})
+        res = self._make_request("in_c", data={"parent": parent, "Name": name})
         return res
 
     def create_place(self, name):

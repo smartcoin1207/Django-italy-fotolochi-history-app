@@ -8,8 +8,8 @@ from api.core import APIClient, APIUpdateError, APICategoryError, APITagError, A
 
 
 class CategoryForm(forms.Form):
-    name = forms.CharField()
-    parent = forms.ChoiceField(required=False)
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
+    parent = forms.ChoiceField(required=True)
 
     def __init__(self, *args, **kwargs):
         super(CategoryForm, self).__init__(*args, **kwargs)
@@ -22,7 +22,7 @@ class CategoryForm(forms.Form):
 
 
 class PlaceForm(forms.Form):
-    name = forms.CharField()
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
     parent = forms.ChoiceField(required=False)
 
     def __init__(self, *args, **kwargs):
@@ -36,7 +36,7 @@ class PlaceForm(forms.Form):
 
 
 class ArchiveForm(forms.Form):
-    name = forms.CharField()
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
 
     def save(self):
         res = self.client.create_archive(self.cleaned_data['name'])
