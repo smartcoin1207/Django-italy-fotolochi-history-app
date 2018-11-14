@@ -47,7 +47,6 @@ class ArchiveForm(forms.Form):
         return res
 
 
-
 class EditForm(forms.ModelForm):
 
     # preview = forms.CharField(
@@ -58,10 +57,10 @@ class EditForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Titolo'}), label="Title", required=True, max_length=128)
 
     short_description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione breve'}), label="Short Description", required=True, max_length=128)
+        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione breve'}), label="Short Description", required=True, max_length=1000)
 
     full_description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione'}), label="Full Description", required=True, max_length=256)
+        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione'}), label="Full Description", required=True, max_length=1000)
 
     notes = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Note'}),
