@@ -17,8 +17,9 @@
 {% endblock %}
 
 {% block main %}
+<section class="section">
 {% if msg %}
-    <p style="color: green; background-color: #f5f5f5;">{{ msg }}</p>
+    <p style="color: green;margin: 0 0 20px 0;">{{ msg }}</p>
 {% endif %}
 <div class="columns">
     <form action="{% url 'administration:add-category' %}" method="post">
@@ -115,5 +116,5 @@
         </form>
     </div>
 </div>
-
+</section>
 {% endblock %}
