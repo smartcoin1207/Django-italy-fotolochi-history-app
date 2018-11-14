@@ -127,7 +127,7 @@ class APIClient:
         else:
             day = month = year = None
         return {
-            'archive': data.get('Archivio'),
+            'archive': data.get('Archivio', {}).get('Nome'),
             'color': data.get('Colore'),
             'place': data.get('Luogo', {}).get('_key'),
             'year': year or data.get('Anno'),

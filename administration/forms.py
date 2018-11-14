@@ -148,7 +148,6 @@ class EditForm(forms.ModelForm):
         self.fields['categories'].choices = [['', 'Select category']] + self.client.categories
         self.fields['archive'].choices = self.client.archives
 
-
     def clean_year(self):
         value = self.cleaned_data.get('year')
         if value > datetime.now().year:
