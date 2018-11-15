@@ -38,6 +38,7 @@ class APIClient:
     VALID_OPS = {
         "categories": "ls_c",
         "visors": "ls_v",
+        "places": "ls_l",
         "tags": "ls_t"
     }
 
@@ -128,7 +129,7 @@ class APIClient:
         return {
             'archive': data.get('Archivio', {}).get('Nome'),
             'color': data.get('Colore'),
-            'place': data.get('Luogo', {}).get('Nome'),
+            'place': data.get('Luogo', {}).get('_key'),
             'year': year or data.get('Anno'),
             'file_name': data.get('File'),
             'api_id': data.get('_key'),
@@ -170,11 +171,11 @@ class APIClient:
         resp = self._make_request("ls_a")
         return zip(resp, resp)
 
-    @property
-    def places(self):
-        resp = self._make_request("ls_l")
-        res = [i[1] for i in resp]
-        return list(zip(res, res))
+    # @property
+    # def places(self):
+    #     resp = self._make_request("ls_l")
+    #     res = [i[1] for i in resp]
+    #     return list(zip(res, res))
 
     def update_visor(self, key, **data):
         op = "in_v"
