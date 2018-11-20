@@ -38,7 +38,7 @@ class APIClient:
     VALID_OPS = {
         "categories": "ls_c",
         "visors": "ls_v",
-        "places": "ls_l",
+        # "places": "ls_l",
         "tags": "ls_t"
     }
 
@@ -129,7 +129,7 @@ class APIClient:
         return {
             'archive': data.get('Archivio'),
             'color': data.get('Colore'),
-            'place': data.get('Luogo', {}).get('_key'),
+            'place': data.get('Luogo'),
             'year': year or data.get('Anno'),
             'file_name': data.get('File'),
             'api_id': data.get('_key'),
@@ -153,11 +153,35 @@ class APIClient:
         res = self._make_request("in_t", data={"Nome": value})
         return res
 
+    def create_category(self, parent, name):
+        res = self._make_request("in_c", data={"parent": parent, "Name": name})
+        if 'ERR INS' in res:
+            raise APIUpdateError('Categoria {} non è stata aggiunta'.format(name))
+        return res
+
+    def create_place(self, name):
+        res = self._make_request("in_l", data={"Nome": name})
+        if 'ERR INS' in res:
+            raise APIUpdateError('Luogo {} non è stato aggiunto'.format(name))
+        return res
+
+    def create_archive(self, name):
+        res = self._make_request("in_a", data={"Nome": name})
+        if 'ERR INS' in res:
+            raise APIUpdateError('Archivio {} non è stato aggiunto'.format(name))
+        return res
+
     @property
     def archives(self):
         # return [('Pic', 'Pic'), ('Other', 'Other')]
         resp = self._make_request("ls_a")
         return zip(resp, resp)
+
+    @property
+    def places(self):
+        resp = self._make_request("ls_l")
+        res = [i[1] for i in resp]
+        return list(zip(res, res))
 
     def update_visor(self, key, **data):
         op = "in_v"

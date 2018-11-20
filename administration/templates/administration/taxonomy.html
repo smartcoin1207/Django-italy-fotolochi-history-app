@@ -1,0 +1,120 @@
+{% extends "administration/base.html" %}
+{% load static %}
+
+
+{% block navbar %}
+<div class="navbar-item">
+    <div class="field is-grouped">
+        <p class="control">
+            <a href="/administration/list/">Back To List</a>
+        </p>
+    </div>
+</div>
+{% endblock %}
+
+{% block pre_css %}
+<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.min.css'>
+{% endblock %}
+
+{% block main %}
+<section class="section">
+{% if msg %}
+    <p style="color: green;margin: 0 0 20px 0;">{{ msg }}</p>
+{% endif %}
+<div class="columns">
+    <form action="{% url 'administration:add-category' %}" method="post">
+    {% csrf_token %}
+    <div class="column">
+        <div class="columns">
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label">Parent category</label>
+                    <div class="control">
+                        {{ category_form.parent }}
+                    </div>
+                    {% if category_form.parent.errors %}
+                    <p class="help is-danger">{% for error in category_form.parent.errors %}{{ error }}{% endfor %}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label">Nome</label>
+                    <div class="control">
+                        {{ category_form.name }}
+                    </div>
+                    {% if category_form.name.errors %}
+                    <p class="help is-danger">{% for error in category_form.name.errors %}{{ error }}{% endfor %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-black">Aggiungi category</button>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+<div class="is-divider"></div>
+<div class="columns">
+    <form action="{% url 'administration:add-place' %}" method="post">
+    {% csrf_token %}
+    <div class="column">
+        <div class="columns">
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label">Parent location</label>
+                    <div class="control">
+                        {{ place_form.parent }}
+                    </div>
+                    {% if place_form.parent.errors %}
+                    <p class="help is-danger">{% for error in place_form.parent.errors %}{{ error }}{% endfor %}</p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="column is-half">
+                <div class="field">
+                    <label class="label">Nome</label>
+                    <div class="control">
+                        {{ place_form.name }}
+                    </div>
+                    {% if place_form.name.errors %}
+                    <p class="help is-danger">{% for error in place_form.name.errors %}{{ error }}{% endfor %}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        <div class="field is-grouped">
+            <div class="control">
+                <button class="button is-black">Aggiungi location</button>
+            </div>
+        </div>
+    </div>
+    </form>
+</div>
+<div class="is-divider"></div>
+<div class="columns">
+    <div class="column is-half">
+        <form action="{% url 'administration:add-archive' %}" method="post">
+        {% csrf_token %}
+        <div class="field">
+            <label class="label">Nome</label>
+            <div class="control">
+                {{ archive_form.name }}
+            </div>
+            {% if archive_form.name.errors %}
+            <p class="help is-danger">{% for error in archive_form.name.errors %}{{ error }}{% endfor %}</p>
+            {% endif %}
+        </div>
+        <div class="field is-grouped has-top-margin">
+            <div class="control">
+                <button class="button is-black">Aggiungi archivio</button>
+            </div>
+        </div>
+        </form>
+    </div>
+</div>
+</section>
+{% endblock %}

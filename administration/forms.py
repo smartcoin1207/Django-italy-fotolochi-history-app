@@ -7,6 +7,61 @@ from .helpers import COLOR_CHOICES, ORIENTATION_CHOICES, SUPPORT_CHOICES
 from api.core import APIClient, APIUpdateError, APICategoryError, APITagError, APIPlaceError
 
 
+class CategoryForm(forms.Form):
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
+    parent = forms.ChoiceField(widget=forms.Select(attrs={'id': 'id_categories'}), required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(CategoryForm, self).__init__(*args, **kwargs)
+        self.client = APIClient()
+        self.fields['parent'].choices = [['', 'Root category']] + self.client.categories
+
+    def save(self):
+        try:
+            res = self.client.create_category(self.cleaned_data['parent'] or '0', self.cleaned_data['name'])
+        except APIUpdateError as e:
+            self.request.session['msg'] = str(e)
+        else:
+            return res
+
+
+class PlaceForm(forms.Form):
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
+    parent = forms.ChoiceField(widget=forms.Select(attrs={'id': 'id_place'}), required=False)
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(PlaceForm, self).__init__(*args, **kwargs)
+        self.client = APIClient()
+        self.fields['parent'].choices = [['', 'Root place']] + self.client.places
+
+    def save(self):
+        try:
+            res = self.client.create_place(self.cleaned_data['name'])
+        except APIUpdateError as e:
+            self.request.session['msg'] = str(e)
+        else:
+            return res
+
+
+class ArchiveForm(forms.Form):
+    name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
+        super(ArchiveForm, self).__init__(*args, **kwargs)
+        self.client = APIClient()
+
+    def save(self):
+        try:
+            res = self.client.create_archive(self.cleaned_data['name'])
+        except APIUpdateError as e:
+            self.request.session['msg'] = str(e)
+        else:
+            return res
+
+
 class EditForm(forms.ModelForm):
 
     # preview = forms.CharField(
@@ -17,10 +72,10 @@ class EditForm(forms.ModelForm):
         widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Titolo'}), label="Title", required=True, max_length=128)
 
     short_description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione breve'}), label="Short Description", required=True, max_length=128)
+        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione breve'}), label="Short Description", required=True, max_length=1000)
 
     full_description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione'}), label="Full Description", required=True, max_length=256)
+        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione'}), label="Full Description", required=True, max_length=1000)
 
     notes = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Note'}),
@@ -107,7 +162,6 @@ class EditForm(forms.ModelForm):
         self.fields['categories'].choices = [['', 'Select category']] + self.client.categories
         self.fields['archive'].choices = self.client.archives
 
-
     def clean_year(self):
         value = self.cleaned_data.get('year')
         if value > datetime.now().year:
@@ -162,6 +216,7 @@ class EditForm(forms.ModelForm):
                 super(EditForm, self).save(commit=commit)
                 self.instance.api_id = resp['_key']
                 self.instance.save()
+            self.request.session['msg'] = 'File {} is successfully modified'.format(self.initial['file_name'])
         if getattr(self, 'img_file', False):
             self.instance.img_file.color = self.cleaned_data['color']
             self.instance.img_file.orientation = self.cleaned_data['orientation']
