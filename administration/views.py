@@ -151,10 +151,11 @@ class AddCategoryView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
 
     def post(self, request, *args, **kwargs):
-        form = CategoryForm(data=request.POST)
+        form = CategoryForm(data=request.POST, request=request)
         if form.is_valid():
             result = form.save()
-            self.request.session['msg'] = 'La categoria {} e\' stata aggiunta'.format(result['Name'])
+            if result:
+                self.request.session['msg'] = 'La categoria {} e\' stata aggiunta'.format(result['Name'])
             return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
         else:
             return render(request, 'administration/taxonomy.html', {
@@ -168,10 +169,11 @@ class AddPlaceView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
 
     def post(self, request, *args, **kwargs):
-        form = PlaceForm(data=request.POST)
+        form = PlaceForm(data=request.POST, request=request)
         if form.is_valid():
             result = form.save()
-            self.request.session['msg'] = 'Location {} e\' stata aggiunta'.format(result['Nome'])
+            if result:
+                self.request.session['msg'] = 'Location {} e\' stata aggiunta'.format(result['Nome'])
             return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
         else:
             return render(request, 'administration/taxonomy.html', {
@@ -185,10 +187,11 @@ class AddArchiveView(LoginRequiredMixin, CreateView):
         return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
 
     def post(self, request, *args, **kwargs):
-        form = ArchiveForm(data=request.POST)
+        form = ArchiveForm(data=request.POST, request=request)
         if form.is_valid():
             result = form.save()
-            self.request.session['msg'] = 'L\'archivio {} e\' stato aggiunto'.format(result)
+            if result:
+                self.request.session['msg'] = 'L\'archivio {} e\' stato aggiunto'.format(result)
             return HttpResponseRedirect(reverse_lazy('administration:taxonomies'))
         else:
             return render(request, 'administration/taxonomy.html', {

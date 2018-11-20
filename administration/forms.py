@@ -12,13 +12,18 @@ class CategoryForm(forms.Form):
     parent = forms.ChoiceField(widget=forms.Select(attrs={'id': 'id_categories'}), required=False)
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super(CategoryForm, self).__init__(*args, **kwargs)
         self.client = APIClient()
         self.fields['parent'].choices = [['', 'Root category']] + self.client.categories
 
     def save(self):
-        res = self.client.create_category(self.cleaned_data['parent'] or '0', self.cleaned_data['name'])
-        return res
+        try:
+            res = self.client.create_category(self.cleaned_data['parent'] or '0', self.cleaned_data['name'])
+        except APIUpdateError as e:
+            self.request.session['msg'] = str(e)
+        else:
+            return res
 
 
 class PlaceForm(forms.Form):
@@ -26,25 +31,35 @@ class PlaceForm(forms.Form):
     parent = forms.ChoiceField(widget=forms.Select(attrs={'id': 'id_place'}), required=False)
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super(PlaceForm, self).__init__(*args, **kwargs)
         self.client = APIClient()
         self.fields['parent'].choices = [['', 'Root place']] + self.client.places
 
     def save(self):
-        res = self.client.create_place(self.cleaned_data['name'])
-        return res
+        try:
+            res = self.client.create_place(self.cleaned_data['name'])
+        except APIUpdateError as e:
+            self.request.session['msg'] = str(e)
+        else:
+            return res
 
 
 class ArchiveForm(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Nome'}))
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request', None)
         super(ArchiveForm, self).__init__(*args, **kwargs)
         self.client = APIClient()
 
     def save(self):
-        res = self.client.create_archive(self.cleaned_data['name'])
-        return res
+        try:
+            res = self.client.create_archive(self.cleaned_data['name'])
+        except APIUpdateError as e:
+            self.request.session['msg'] = str(e)
+        else:
+            return res
 
 
 class EditForm(forms.ModelForm):
@@ -201,6 +216,7 @@ class EditForm(forms.ModelForm):
                 super(EditForm, self).save(commit=commit)
                 self.instance.api_id = resp['_key']
                 self.instance.save()
+            self.request.session['msg'] = 'File {} is successfully modified'.format(self.initial['file_name'])
         if getattr(self, 'img_file', False):
             self.instance.img_file.color = self.cleaned_data['color']
             self.instance.img_file.orientation = self.cleaned_data['orientation']
