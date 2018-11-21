@@ -94,6 +94,10 @@ class APIClient:
             'Supporto': data.get('support', '6x6'),
             'Orientamento': data.get('orientation', '1')
         }
+        # if data.get('api_id'):
+        #     payload.update({
+        #         'visor': data['api_id']
+        #     })
         if data.get('color'):
             payload.update({
                 'Colore': data['color']

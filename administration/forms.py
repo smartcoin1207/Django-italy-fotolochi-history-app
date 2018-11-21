@@ -184,12 +184,13 @@ class EditForm(forms.ModelForm):
     def save(self, commit=True):
         # update_connections = False
         self.cleaned_data.update({
-            'file_name': self.img_file.file_name if getattr(self, 'img_file', False) else self.initial['file_name']
+            'file_name': self.img_file.file_name if getattr(self, 'img_file', False) else self.initial['file_name'],
+            'api_id': self.initial.get('api_id')
         })
         try:
             # if self.instance.api_id:
             #     update_connections = True
-            resp = self.client.update_visor(self.instance.api_id, **self.cleaned_data)
+            resp = self.client.update_visor(self.instance.api_id or self.initial.get('api_id'), **self.cleaned_data)
             # if update_connections:
             #     tags_to_delete = set(self.initial['tags']) - set(self.cleaned_data['tags'])
             #     tags_to_add = set(self.cleaned_data['tags']) - set(self.initial['tags'])
