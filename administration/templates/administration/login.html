@@ -1,37 +1,116 @@
-{% extends "administration/base.html" %}
-{#% load static %#}
-{% block main %}
-<div class="l-content">
-<!--    <script src="{#% static 'company/js/login.js' %#}"></script>-->
-    <main class="l-contentText" role="main">
-        <div class="b-underHeader">
-        </div>
-        <div class="container g-container g-clearfix">
-            <div id="login" class="wrapper">
+<!DOCTYPE html>
+<html>
+    <head>
+        {% load render_bundle from webpack_loader %}
+        {% load static %}
+        <meta charset="utf-8">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>{% block title %}Foto Locchi{% endblock %}</title>
+        <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
+              integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.1/css/bulma.min.css" />
+        {% render_bundle 'main' 'css' %}
+        <script defer src="https://use.fontawesome.com/releases/v5.1.0/js/all.js"></script>
+        <style>
+            body {
+        background: #000;
+        font-family: 'Poppins', sans-serif;
+      }
 
-                <form id="login_form" class="ui form" action="{% url 'administration:login' %}" method="post">
-                    {% csrf_token %}
-                    <h2 class="b-form__header form-signin-heading">Login</h2>
+      header {
+        text-align: center;
+        padding: 80px 0;
+      }
 
-                    {% for field in form %}
-                    <div class="field fourteen wide">
-                        <label for="{{field.name}}" class="b-inputBlock__label validate" data-error="wrong">{{field.label}}</label>
-                        {{field}}
-                        
-                    </div>
-                    {% endfor %}
+      header a {
+        opacity: .25;
+      }
 
-                    <div>
-                        <button type="submit" class="ui black submit button">Login</button>
+      header a:hover {
+        opacity: .30;
+      }
+
+      header img {
+        max-width: 300px;
+      }
+
+      .formBlock {
+        color: #fff;
+        max-width: 360px;
+        margin: 0 auto;
+      }
+
+      label {
+        width: 100%;
+        float: left;
+        font-size: 16px;
+        text-transform: uppercase;
+        color: #aaa;
+        font-weight: bold;
+      }
+
+      button {
+        background: #eee;
+        color: #000;
+        border: none;
+        font-weight: bold;
+        font-family: 'Poppins', sans-serif;
+        width: 100%;
+        font-size: 24px;
+        text-align: center;
+        cursor: pointer;
+        padding: 10px 5%;
+        outline: none;
+      }
+
+      button:hover {
+        background: #fff;
+      }
+
+      .msg {
+        border: 3px solid #fff;
+        margin-bottom: 50px;
+        padding: 20px;
+      }
+
+
+        </style>
+    </head>
+    <body id="app">
+    <section class="hero is-fullheight" style="background-color: black;">
+        <div class="hero-body">
+            <div class="container has-text-centered">
+                <div class="column is-4 is-offset-4">
+                    <div class="box login-box">
+                        <img class="login-logo-img" src="{% static 'img/logo-white.png' %}" />
                     </div>
-                    <div>
-                        {% if errors %}
-                        <p style="color: red">{{errors}}</p>
-                        {% endif %}
+                    <div class="box login-box">
+                        <form id="login_form" class="ui form" action="{% url 'administration:login' %}" method="post">
+                            {% csrf_token %}
+                            {% if form.errors %}
+                                <div class="msg">{% for _, error in form.errors.items %}{{ error }}<br/>{% endfor %}</div>
+                            {% endif %}
+                            <div class="field">
+                                <label style="text-align: left;">Username</label>
+                                <div class="control">
+                                    <input name="{{ form.username.name }}" class="login-field" type="text" autofocus="" value="{% if form.username.value %}{{ form.username.value}}{% endif %}"/>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <label style="text-align: left;">Password</label>
+                                <div class="control">
+                                    <input name="{{ form.password.name }}" class="login-field" type="password" />
+                                </div>
+                            </div>
+                            <button>Login</button>
+                        </form>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
-    </main>
-</div><!--content-->
-{% endblock %}
+    </section>
+    </body>
+</html>
