@@ -17,6 +17,7 @@ $( function () {
     }
   });
   $('#id_tags').selectize({
+    plugins: ['remove_button'],
     render: {
         option_create: function(data, escape) {
           return '<div class="create" style="line-height: 2rem; vertical-align: middle; height: 2rem; font-size: 1.5rem;">Add <strong>' + escape(data.input) + '</strong>&hellip;</div>';
@@ -41,8 +42,12 @@ $( function () {
         });
     }
   });
-  $('#id_place').selectize();
-  $('#id_categories').selectize();
+  $('#id_place').selectize({
+    plugins: ['remove_button'],
+  });
+  $('#id_categories').selectize({
+    plugins: ['remove_button'],
+  });
   $('#id_rating').barrating('show', {
     theme: 'bars-square',
     showValues: true,
