@@ -81,6 +81,9 @@ class EditForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Note'}),
         label="Note", required=False, max_length=256)
 
+    shop_link = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Link d\'acquisto'}), label="Link d\'acquisto", required=False, max_length=255)
+
     day = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'dd'}), label="Day", required=False
     )
@@ -147,7 +150,7 @@ class EditForm(forms.ModelForm):
         exclude = []
         fields = ['title', 'short_description', 'full_description', 'rating', 'creative', 'is_publish',
                   'place', 'tags', 'categories', 'archive', 'notes', 'day', 'month', 'year', 'is_decennary',
-                  'scope', 'orientation', 'color', 'support']
+                  'scope', 'orientation', 'color', 'support', 'shop_link']
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -188,28 +191,7 @@ class EditForm(forms.ModelForm):
             'api_id': self.initial.get('api_id')
         })
         try:
-            # if self.instance.api_id:
-            #     update_connections = True
             resp = self.client.update_visor(self.instance.api_id or self.initial.get('api_id'), **self.cleaned_data)
-            # if update_connections:
-            #     tags_to_delete = set(self.initial['tags']) - set(self.cleaned_data['tags'])
-            #     tags_to_add = set(self.cleaned_data['tags']) - set(self.initial['tags'])
-            #
-            #     for tag in tags_to_add:
-            #         self.client.add_tag_to_visor(self.instance.api_id, tag)
-            #
-            #     for tag in tags_to_delete:
-            #         self.client.delete_tag_from_visor(self.instance.api_id, tag)
-            #
-            #     categories_to_delete = set(self.initial['categories']) - set(self.cleaned_data['categories'])
-            #     categories_to_add = set(self.cleaned_data['categories']) - set(self.initial['categories'])
-            #
-            #     for category in categories_to_add:
-            #         self.client.add_category_to_visor(self.instance.api_id, category)
-            #
-            #     for category in categories_to_delete:
-            #         self.client.delete_category_from_visor(self.instance.api_id, category)
-
         except (APIUpdateError, APICategoryError, APITagError, APIPlaceError) as e:
             self.request.session['msg'] = str(e)
         else:
@@ -218,6 +200,7 @@ class EditForm(forms.ModelForm):
                 self.instance.api_id = resp['_key']
                 self.instance.save()
             self.request.session['msg'] = 'File {} is successfully modified'.format(self.initial['file_name'])
+            self.request.session['image_data'] = resp
         if getattr(self, 'img_file', False):
             self.instance.img_file.color = self.cleaned_data['color']
             self.instance.img_file.orientation = self.cleaned_data['orientation']

@@ -80,6 +80,17 @@
                     {{ form.notes }}
                 </div>
             </div>
+
+            <div class="field">
+                <label class="label">Link d'acquito</label>
+                <div class="control is-greyed">
+                    {{ form.shop_link }}
+                </div>
+                {% if form.shop_link.errors %}
+                <p class="help is-danger">{% for error in form.shop_link.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
+
             <div class="columns">
                 <div class="column">
                     <div class="field">
@@ -211,7 +222,7 @@
 
             <div class="field is-grouped has-top-margin">
                 <div class="control">
-                    <button class="button is-large is-black">Aggiungi/Modifica immagine</button>
+                    <button class="button is-large is-black">Salva e modifica la foto successiva</button>
                 </div>
                 <div class="control">
                     <a class="button is-text is-large delete-button" href="{% url 'administration:delete' file_name=form.initial.file_name %}">Delete</a>

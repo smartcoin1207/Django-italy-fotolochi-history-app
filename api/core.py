@@ -122,6 +122,10 @@ class APIClient:
             payload.update({
                 'Categoria': ";".join(data['categories'])
             })
+        if data.get('shop_link'):
+            payload.update({
+                'Link': data['shop_link']
+            })
         return payload
 
     def _convert_api_data(self, **data):
@@ -150,7 +154,8 @@ class APIClient:
             'note': data.get('Note'),
             'rating': data.get('Rating'),
             'orientation': data.get('Orientamento'),
-            'categories': data.get('Categoria')
+            'categories': data.get('Categoria'),
+            'shop_link': data.get('Link')
         }
 
     def create_tag(self, value):

@@ -43,6 +43,7 @@ class List(LoginRequiredMixin, ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         ctx = super(List, self).get_context_data(object_list=object_list, **kwargs)
         ctx['msg'] = self.request.session.pop('msg', '')
+        self.request.session['next'] = True
         return ctx
 
 
@@ -95,7 +96,16 @@ class Edit(LoginRequiredMixin, UpdateView):
         kwargs['initial'].update(client.get_file(file_name, get_content=True))
         kwargs['initial'].update({'file_name': file_name})
         kwargs.update({'request': self.request})
+        # kwargs.update({'next_image': self.request.GET.get('next')})
         return kwargs
+
+    # def get_success_url(self):
+    #     if self.request.session.get('next'):
+    #         next_image = self.object.get_previous_by_date_updated()
+    #         if next_image and getattr(next_image, 'img_file', False):
+    #             return HttpResponseRedirect(
+    #                 reverse_lazy('administration:edit', kwargs={'file_name': next_image.img_file.filename}))
+    #     return HttpResponseRedirect(reverse_lazy('administration:list'))
 
 
 class TagView(LoginRequiredMixin, View):
@@ -116,6 +126,7 @@ class SearchView(LoginRequiredMixin, View):
         filename = request.GET['file']
         client = APIClient()
         data = client.search(filename)
+        self.request.session['next'] = None
         return render(request, self.template_name, {'search_value': filename, 'list': data})
 
 class Delete(LoginRequiredMixin, DeleteView):

@@ -60,6 +60,7 @@ class ImageData(models.Model):
     img_file = models.ForeignKey(ImageFile, on_delete=models.CASCADE)
     api_id = models.CharField(max_length=255, unique=True, db_index=True, null=True, blank=True)
     title = models.CharField(null=True, max_length=255)
+    shop_link = models.CharField(null=True, max_length=255)
     short_description = models.CharField(null=True, max_length=255)
     full_description = models.TextField(null=True)
     date_updated = models.DateTimeField(auto_now=True)
