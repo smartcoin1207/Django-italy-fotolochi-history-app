@@ -36,7 +36,7 @@ class List(LoginRequiredMixin, ListView):
     model = ImageData
     template_name = 'administration/list.html'
     context_object_name = 'list'
-    ordering = ('-date_updated')
+    ordering = ['img_file__file_name']
     paginate_by = 5
     queryset = ImageData.objects.filter(is_completed=False)
 
@@ -99,13 +99,12 @@ class Edit(LoginRequiredMixin, UpdateView):
         # kwargs.update({'next_image': self.request.GET.get('next')})
         return kwargs
 
-    # def get_success_url(self):
-    #     if self.request.session.get('next'):
-    #         next_image = self.object.get_previous_by_date_updated()
-    #         if next_image and getattr(next_image, 'img_file', False):
-    #             return HttpResponseRedirect(
-    #                 reverse_lazy('administration:edit', kwargs={'file_name': next_image.img_file.filename}))
-    #     return HttpResponseRedirect(reverse_lazy('administration:list'))
+    def get_success_url(self):
+        if self.request.session.get('next'):
+            next_image = self.object.get_next_by_filename()
+            if next_image and getattr(next_image, 'img_file', False):
+                return reverse_lazy('administration:edit', kwargs={'file_name': next_image.img_file.file_name})
+        return reverse_lazy('administration:list')
 
 
 class TagView(LoginRequiredMixin, View):

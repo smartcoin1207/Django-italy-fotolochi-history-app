@@ -94,3 +94,11 @@ class ImageData(models.Model):
                 self.year:
             self.is_completed = True
             self.save()
+
+    def get_next_by_filename(self):
+        if getattr(self, 'img_file', False):
+            return ImageData.objects.select_related(
+                'img_file'
+            ).order_by('img_file__file_name').filter(
+                img_file__file_name__gt=self.img_file.file_name, is_completed=False).first()
+        return None
