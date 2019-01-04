@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 from django import forms
 
@@ -200,11 +201,10 @@ class EditForm(forms.ModelForm):
                 self.instance.api_id = resp['_key']
                 self.instance.save()
             self.request.session['msg'] = 'File {} is successfully modified'.format(self.initial['file_name'])
-            self.request.session['image_data'] = resp
         if getattr(self, 'img_file', False):
             self.instance.img_file.color = self.cleaned_data['color']
             self.instance.img_file.orientation = self.cleaned_data['orientation']
             self.instance.img_file.save()
             self.instance.mark_as_completed()
-
+        self.request.session['image_data'] = json.dumps(self.cleaned_data)
         return self.instance

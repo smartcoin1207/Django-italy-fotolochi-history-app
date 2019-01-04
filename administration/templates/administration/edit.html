@@ -17,6 +17,11 @@
 {% endblock %}
 
 {% block main %}
+{% if request.session.msg %}
+    <div class="box">
+        <p style="color: green; text-align: center; font-weight: bold;">{{ request.session.msg }}</p>
+    </div>
+{% endif %}
 <form action="." method="post">
     <div class="columns">
         <div class="column is-narrow is-offset-2">
@@ -37,6 +42,11 @@
                 <label class="label">Orientation</label>
                 <div class="control">
                     {{ form.orientation }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button id="compile_image_data" class="button is-small is-black">Autofill dall'ultima foto</button>
                 </div>
             </div>
         </div>
@@ -231,4 +241,12 @@
         </div>
     </div>
 </form>
+{% endblock %}
+
+
+{% block post_js %}
+<script>
+    window.fotolocchi_image_data = {{ request.session.image_data|safe }};
+</script>
+
 {% endblock %}
