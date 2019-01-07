@@ -42,9 +42,7 @@ $( function () {
         });
     }
   });
-  $('#id_place').selectize({
-    plugins: ['remove_button'],
-  });
+  $('#id_place').selectize({});
   $('#id_categories').selectize({
     plugins: ['remove_button'],
   });
