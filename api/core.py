@@ -151,7 +151,7 @@ class APIClient:
             'short_description': data.get('DescBreve'),
             'full_description': data.get('DescLunga'),
             'support': data.get('Supporto'),
-            'note': data.get('Note'),
+            'notes': data.get('Note'),
             'rating': data.get('Rating'),
             'orientation': data.get('Orientamento'),
             'categories': data.get('Categoria'),
