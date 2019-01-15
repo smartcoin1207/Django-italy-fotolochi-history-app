@@ -90,13 +90,16 @@
                         <form id="login_form" class="ui form" action="{% url 'administration:login' %}" method="post">
                             {% csrf_token %}
                             {% if form.errors %}
-                                <div class="msg">{% for _, error in form.errors.items %}{{ error }}<br/>{% endfor %}</div>
+                                <div class="msg">Incorrect login/password</div>
                             {% endif %}
                             <div class="field">
                                 <label style="text-align: left;">Username</label>
                                 <div class="control">
                                     <input name="{{ form.username.name }}" class="login-field" type="text" autofocus="" value="{% if form.username.value %}{{ form.username.value}}{% endif %}"/>
                                 </div>
+                                {% if form.username.errors %}
+                                <div class="msg">{{ form.username.errors }}</div>
+                                {% endif %}
                             </div>
 
                             <div class="field">
@@ -104,6 +107,9 @@
                                 <div class="control">
                                     <input name="{{ form.password.name }}" class="login-field" type="password" />
                                 </div>
+                                {% if form.password.errors %}
+                                    <div class="msg">{{ form.password.errors }}</div>
+                                {% endif %}
                             </div>
                             <button>Login</button>
                         </form>
