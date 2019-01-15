@@ -232,7 +232,7 @@
 
             <div class="field is-grouped has-top-margin">
                 <div class="control">
-                    <button class="button is-large is-black">Salva e modifica la foto successiva</button>
+                    <button class="button is-large is-black">{{ save_button_label|default:'Salva e modifica la foto successiva' }}</button>
                 </div>
                 <div class="control">
                     <a class="button is-text is-large delete-button" href="{% url 'administration:delete' file_name=form.initial.file_name %}">Delete</a>

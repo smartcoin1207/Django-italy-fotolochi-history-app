@@ -126,7 +126,7 @@ class SearchView(LoginRequiredMixin, View):
         client = APIClient()
         data = client.search(filename)
         self.request.session['next'] = None
-        return render(request, self.template_name, {'search_value': filename, 'list': data})
+        return render(request, self.template_name, {'search_value': filename, 'list': data, 'save_button_label': 'Salva la foto'})
 
 class Delete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('administration:list')
