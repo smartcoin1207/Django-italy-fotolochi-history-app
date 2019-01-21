@@ -13,7 +13,7 @@
 {% endblock %}
 
 {% block pre_css %}
-<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.min.css'>
+<link rel='stylesheet prefetch' href="{% static 'css/lightbox.min.css' %}">
 {% endblock %}
 
 {% block main %}
@@ -28,7 +28,9 @@
             <div class="fotolocchi-side-img">
                 <span class="fotolocchi-side-img-title">File: {{ form.initial.file_name }}</span>
                 <figure class="image">
-                    <img src="/media/preview/prev_{{ form.initial.file_name }}"/>
+                    <a href="http://www.fotolocchi.it/samples/{{ form.initial.file_name }}" data-lightbox="{{ form.initial.file_name }}">
+                        <img src="/media/preview/prev_{{ form.initial.file_name }}"/>
+                    </a>
                 </figure>
             </div>
             <div class="field">
@@ -245,6 +247,7 @@
 
 
 {% block post_js %}
+<script src="{% static 'js/lightbox.min.js'%}"></script>
 <script>
     window.fotolocchi_image_data = {{ request.session.image_data|safe }};
 </script>

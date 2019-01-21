@@ -31,6 +31,7 @@
     "jquery": "^3.3.1",
     "jquery-bar-rating": "^1.2.2",
     "less-loader": "^4.1.0",
+    "lightbox2": "^2.10.0",
     "microplugin": "0.0.3",
     "mini-css-extract-plugin": "^0.4.2",
     "postcss-loader": "^3.0.0",
