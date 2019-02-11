@@ -50,8 +50,8 @@ class ImageData(models.Model):
         (PRODUCT_STATUS_NOT_PUBLISHED, 'Non publicato')
     )
 
-    ONLY_EDITORIAL = 'S'
-    EDITORIAL_AND_STAMP = 'N'
+    ONLY_EDITORIAL = '1'
+    EDITORIAL_AND_STAMP = '2'
     SCOPE = (
         (ONLY_EDITORIAL, 'Solo editoriale'),
         (EDITORIAL_AND_STAMP, 'Editoriale e stampa')
