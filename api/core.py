@@ -233,11 +233,13 @@ class APIClient:
         if value.startswith('V') and is_integer(value[1:]):
             return [self._convert_api_data(**i) for i in self._make_request(op, data={'key': value})]
         else:
-            results = []
+            results = {}
             for i in ['name', 'file']:
-                results.extend([self._convert_api_data(**i) for i in self._make_request(op, data={i: value})])
-            # TODO: make this configurable
-            return results[:100]
+                current = [self._convert_api_data(**i) for i in self._make_request(op, data={i: value})]
+                for j in current:
+                    if j['api_id'] not in results:
+                        results[j['api_id']] = j
+            return list(results.values())[:100]
 
     def delete_visor(self, key):
         op = "dl_v"
