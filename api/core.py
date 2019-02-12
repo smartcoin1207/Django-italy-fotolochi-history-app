@@ -89,7 +89,7 @@ class APIClient:
             'Utenza': '1' if data.get('scope', '') else '0',
             'Creative': 'S' if data.get('creative') else 'N',
             'Rating': str(data.get('rating', 0)),
-            'StatoProdotto': data.get('status'),
+            'StatoProdotto': 'S' if data.get('is_publish') else 'N',
             'Note': data.get('notes', ''),
             'Supporto': data.get('support', '6x6'),
             'Orientamento': data.get('orientation', '1')
@@ -146,6 +146,7 @@ class APIClient:
             'title': data.get('Nome'),
             'tags': data.get('Tags'),
             'is_decennary': True if data.get('Decennio', 'N') == 'S' else False,
+            'is_publish': True if data.get('Stato', 'N') == 'S' else False,
             'day': day,
             'month': month,
             'short_description': data.get('DescBreve'),

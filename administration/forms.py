@@ -113,7 +113,7 @@ class EditForm(forms.ModelForm):
     )
 
     is_publish = forms.BooleanField(
-        initial=True,
+        initial=False,
         widget=forms.CheckboxInput(attrs={'class': 'checkbox'}), label="Is Publish", required=False
     )
 
@@ -176,8 +176,6 @@ class EditForm(forms.ModelForm):
 
     def clean(self):
         super(EditForm, self).clean()
-        self.cleaned_data['status'] = ImageData.PRODUCT_STATUS_PUBLISHED \
-            if self.cleaned_data['is_publish'] else ImageData.PRODUCT_STATUS_NOT_PUBLISHED
         if self.cleaned_data.get('month') and not self.cleaned_data.get('day'):
             self.add_error('day', 'Please define day')
         if self.cleaned_data.get('day') and not self.cleaned_data.get('month'):
