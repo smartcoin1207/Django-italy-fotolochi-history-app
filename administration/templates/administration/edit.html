@@ -249,7 +249,7 @@
 {% block post_js %}
 <script src="{% static 'js/lightbox.min.js'%}"></script>
 <script>
-    window.fotolocchi_image_data = {{ request.session.image_data|safe }};
+    window.fotolocchi_image_data = {{ request.session.image_data|safe|default_if_none:'' }};
 </script>
 
 {% endblock %}
