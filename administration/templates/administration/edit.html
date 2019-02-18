@@ -248,8 +248,9 @@
 
 {% block post_js %}
 <script src="{% static 'js/lightbox.min.js'%}"></script>
+{% if request.session.image_data %}
 <script>
-    window.fotolocchi_image_data = {{ request.session.image_data|safe|default:'' }};
+    window.fotolocchi_image_data = {{ request.session.image_data|safe }};
 </script>
-
+{% endif %}
 {% endblock %}
