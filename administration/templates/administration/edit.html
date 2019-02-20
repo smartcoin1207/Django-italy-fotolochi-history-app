@@ -28,9 +28,15 @@
             <div class="fotolocchi-side-img">
                 <span class="fotolocchi-side-img-title">File: {{ form.initial.file_name }}</span>
                 <figure class="image">
+                    {% if form.img_file %}
+                    <a href="/media/{{ form.img_file.preview_name }}" data-lightbox="{{ form.initial.file_name }}">
+                        <img src="/media/{{ form.img_file.preview_name }}"/>
+                    </a>
+                    {% else %}
                     <a href="http://151.11.48.110/plesk-site-preview/fotolocchi.it/151.11.48.110/samples/{{ form.initial.file_name }}" data-lightbox="{{ form.initial.file_name }}">
                         <img src="http://151.11.48.110/plesk-site-preview/fotolocchi.it/151.11.48.110/samples/{{ form.initial.file_name }}"/>
                     </a>
+                    {% endif %}
                 </figure>
             </div>
             <div class="field">
