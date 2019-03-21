@@ -92,7 +92,8 @@ class APIClient:
             'StatoProdotto': 'S' if data.get('is_publish') else 'N',
             'Note': data.get('notes', ''),
             'Supporto': data.get('support', '6x6'),
-            'Orientamento': data.get('orientation', '1')
+            'Orientamento': data.get('orientation', '1'),
+            'Link': data.get('shop_link', '')
         }
         # if data.get('api_id'):
         #     payload.update({
@@ -121,10 +122,6 @@ class APIClient:
         if data.get('categories'):
             payload.update({
                 'Categoria': ";".join(data['categories'])
-            })
-        if data.get('shop_link'):
-            payload.update({
-                'Link': data['shop_link']
             })
         return payload
 
