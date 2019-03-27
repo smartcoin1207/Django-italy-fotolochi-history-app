@@ -85,7 +85,8 @@ def rotate(img_path, rotation):
 
 def get_rotation(img_path):
     image = Image.open(img_path)
-    return image._getexif().get(274, 0)
+    exif = image._getexif()
+    return exif.get(274, 0) if exif else 0
 
 
 def resize(img_path, modified_path, min_size):
