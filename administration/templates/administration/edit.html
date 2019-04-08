@@ -13,17 +13,30 @@
 {% endblock %}
 
 {% block pre_css %}
-<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.min.css'>
+<link rel='stylesheet prefetch' href="{% static 'css/lightbox.min.css' %}">
 {% endblock %}
 
 {% block main %}
+{% if request.session.msg %}
+    <div class="box has-top-margin">
+        <p style="color: green; text-align: center; font-weight: bold;">{{ request.session.msg }}</p>
+    </div>
+{% endif %}
 <form action="." method="post">
     <div class="columns">
         <div class="column is-narrow is-offset-2">
             <div class="fotolocchi-side-img">
                 <span class="fotolocchi-side-img-title">File: {{ form.initial.file_name }}</span>
                 <figure class="image">
-                    <img src="/media/preview/prev_{{ form.initial.file_name }}"/>
+                    {% if form.img_file %}
+                    <a href="/media/{{ form.img_file.preview_name }}" data-lightbox="{{ form.initial.file_name }}">
+                        <img src="/media/{{ form.img_file.preview_name }}"/>
+                    </a>
+                    {% else %}
+                    <a href="http://151.11.48.110/plesk-site-preview/fotolocchi.it/151.11.48.110/samples/{{ form.initial.file_name }}" data-lightbox="{{ form.initial.file_name }}">
+                        <img src="http://151.11.48.110/plesk-site-preview/fotolocchi.it/151.11.48.110/samples/{{ form.initial.file_name }}"/>
+                    </a>
+                    {% endif %}
                 </figure>
             </div>
             <div class="field">
@@ -37,6 +50,11 @@
                 <label class="label">Orientation</label>
                 <div class="control">
                     {{ form.orientation }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button id="compile_image_data" class="button is-small is-black">Autofill dall'ultima foto</button>
                 </div>
             </div>
         </div>
@@ -80,6 +98,17 @@
                     {{ form.notes }}
                 </div>
             </div>
+
+            <div class="field">
+                <label class="label">Link d'acquisto</label>
+                <div class="control is-greyed">
+                    {{ form.shop_link }}
+                </div>
+                {% if form.shop_link.errors %}
+                <p class="help is-danger">{% for error in form.shop_link.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
+
             <div class="columns">
                 <div class="column">
                     <div class="field">
@@ -211,7 +240,7 @@
 
             <div class="field is-grouped has-top-margin">
                 <div class="control">
-                    <button class="button is-large is-black">Aggiungi/Modifica immagine</button>
+                    <button class="button is-large is-black">{{ save_button_label|default:'Salva e modifica la foto successiva' }}</button>
                 </div>
                 <div class="control">
                     <a class="button is-text is-large delete-button" href="{% url 'administration:delete' file_name=form.initial.file_name %}">Delete</a>
@@ -220,4 +249,14 @@
         </div>
     </div>
 </form>
+{% endblock %}
+
+
+{% block post_js %}
+<script src="{% static 'js/lightbox.min.js'%}"></script>
+{% if request.session.image_data %}
+<script>
+    window.fotolocchi_image_data = {{ request.session.image_data|safe }};
+</script>
+{% endif %}
 {% endblock %}

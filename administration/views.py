@@ -36,7 +36,7 @@ class List(LoginRequiredMixin, ListView):
     model = ImageData
     template_name = 'administration/list.html'
     context_object_name = 'list'
-    ordering = ('-date_updated')
+    ordering = ['img_file__file_name']
     paginate_by = 5
     queryset = ImageData.objects.filter(is_completed=False)
 
@@ -95,7 +95,21 @@ class Edit(LoginRequiredMixin, UpdateView):
         kwargs['initial'].update(client.get_file(file_name, get_content=True))
         kwargs['initial'].update({'file_name': file_name})
         kwargs.update({'request': self.request})
+        # kwargs.update({'next_image': self.request.GET.get('next')})
         return kwargs
+
+    def get_context_data(self, *args, **kwargs):
+        ctx = super(Edit, self).get_context_data(*args, **kwargs)
+        if self.request.GET.get('from'):
+            ctx.update({'save_button_label': 'Salva la foto'})
+        return ctx
+
+    def get_success_url(self):
+        if not self.request.GET.get('from'):
+            next_image = self.object.get_next_by_filename()
+            if next_image and getattr(next_image, 'img_file', False):
+                return reverse_lazy('administration:edit', kwargs={'file_name': next_image.img_file.file_name})
+        return reverse_lazy('administration:list')
 
 
 class TagView(LoginRequiredMixin, View):
@@ -117,6 +131,7 @@ class SearchView(LoginRequiredMixin, View):
         client = APIClient()
         data = client.search(filename)
         return render(request, self.template_name, {'search_value': filename, 'list': data})
+
 
 class Delete(LoginRequiredMixin, DeleteView):
     success_url = reverse_lazy('administration:list')

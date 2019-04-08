@@ -89,10 +89,11 @@ class APIClient:
             'Utenza': '1' if data.get('scope', '') else '0',
             'Creative': 'S' if data.get('creative') else 'N',
             'Rating': str(data.get('rating', 0)),
-            'StatoProdotto': data.get('status'),
+            'StatoProdotto': 'S' if data.get('is_publish') else 'N',
             'Note': data.get('notes', ''),
             'Supporto': data.get('support', '6x6'),
-            'Orientamento': data.get('orientation', '1')
+            'Orientamento': data.get('orientation', '1'),
+            'Link': data.get('shop_link', '')
         }
         # if data.get('api_id'):
         #     payload.update({
@@ -137,20 +138,22 @@ class APIClient:
             'year': year or data.get('Anno'),
             'file_name': data.get('File'),
             'api_id': data.get('_key'),
-            'creative': data.get('Creative'),
-            'scope': 'S' if data.get('Utenza', '0') == 1 else 'N',
+            'creative': False if data.get('Creative', 'N') == 'N' else True,
+            'scope': '1' if data.get('Utenza', '0') == '1' else '2',
             'title': data.get('Nome'),
             'tags': data.get('Tags'),
             'is_decennary': True if data.get('Decennio', 'N') == 'S' else False,
+            'is_publish': True if data.get('Stato', 'N') == 'S' else False,
             'day': day,
             'month': month,
             'short_description': data.get('DescBreve'),
             'full_description': data.get('DescLunga'),
             'support': data.get('Supporto'),
-            'note': data.get('Note'),
+            'notes': data.get('Note'),
             'rating': data.get('Rating'),
             'orientation': data.get('Orientamento'),
-            'categories': data.get('Categoria')
+            'categories': data.get('Categoria'),
+            'shop_link': data.get('Link')
         }
 
     def create_tag(self, value):
@@ -228,11 +231,13 @@ class APIClient:
         if value.startswith('V') and is_integer(value[1:]):
             return [self._convert_api_data(**i) for i in self._make_request(op, data={'key': value})]
         else:
-            results = []
+            results = {}
             for i in ['name', 'file']:
-                results.extend([self._convert_api_data(**i) for i in self._make_request(op, data={i: value})])
-            # TODO: make this configurable
-            return results[:100]
+                current = [self._convert_api_data(**i) for i in self._make_request(op, data={i: value})]
+                for j in current:
+                    if j['api_id'] not in results:
+                        results[j['api_id']] = j
+            return list(results.values())[:100]
 
     def delete_visor(self, key):
         op = "dl_v"

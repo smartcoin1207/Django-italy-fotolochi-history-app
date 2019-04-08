@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 
 from django import forms
 
@@ -75,11 +76,14 @@ class EditForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione breve'}), label="Short Description", required=True, max_length=1000)
 
     full_description = forms.CharField(
-        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione'}), label="Full Description", required=True, max_length=1000)
+        widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Descrizione'}), label="Full Description", required=False, max_length=1000)
 
     notes = forms.CharField(
         widget=forms.Textarea(attrs={'rows': 5, 'class': 'textarea', 'placeholder': 'Note'}),
         label="Note", required=False, max_length=256)
+
+    shop_link = forms.CharField(
+        widget=forms.TextInput(attrs={'class': 'input', 'placeholder': 'Link d\'acquisto'}), label="Link d\'acquisto", required=False, max_length=255)
 
     day = forms.IntegerField(
         widget=forms.NumberInput(attrs={'class': 'input', 'placeholder': 'dd'}), label="Day", required=False
@@ -109,7 +113,7 @@ class EditForm(forms.ModelForm):
     )
 
     is_publish = forms.BooleanField(
-        initial=True,
+        initial=False,
         widget=forms.CheckboxInput(attrs={'class': 'checkbox'}), label="Is Publish", required=False
     )
 
@@ -147,7 +151,7 @@ class EditForm(forms.ModelForm):
         exclude = []
         fields = ['title', 'short_description', 'full_description', 'rating', 'creative', 'is_publish',
                   'place', 'tags', 'categories', 'archive', 'notes', 'day', 'month', 'year', 'is_decennary',
-                  'scope', 'orientation', 'color', 'support']
+                  'scope', 'orientation', 'color', 'support', 'shop_link']
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request', None)
@@ -172,8 +176,6 @@ class EditForm(forms.ModelForm):
 
     def clean(self):
         super(EditForm, self).clean()
-        self.cleaned_data['status'] = ImageData.PRODUCT_STATUS_PUBLISHED \
-            if self.cleaned_data['is_publish'] else ImageData.PRODUCT_STATUS_NOT_PUBLISHED
         if self.cleaned_data.get('month') and not self.cleaned_data.get('day'):
             self.add_error('day', 'Please define day')
         if self.cleaned_data.get('day') and not self.cleaned_data.get('month'):
@@ -188,28 +190,7 @@ class EditForm(forms.ModelForm):
             'api_id': self.initial.get('api_id')
         })
         try:
-            # if self.instance.api_id:
-            #     update_connections = True
             resp = self.client.update_visor(self.instance.api_id or self.initial.get('api_id'), **self.cleaned_data)
-            # if update_connections:
-            #     tags_to_delete = set(self.initial['tags']) - set(self.cleaned_data['tags'])
-            #     tags_to_add = set(self.cleaned_data['tags']) - set(self.initial['tags'])
-            #
-            #     for tag in tags_to_add:
-            #         self.client.add_tag_to_visor(self.instance.api_id, tag)
-            #
-            #     for tag in tags_to_delete:
-            #         self.client.delete_tag_from_visor(self.instance.api_id, tag)
-            #
-            #     categories_to_delete = set(self.initial['categories']) - set(self.cleaned_data['categories'])
-            #     categories_to_add = set(self.cleaned_data['categories']) - set(self.initial['categories'])
-            #
-            #     for category in categories_to_add:
-            #         self.client.add_category_to_visor(self.instance.api_id, category)
-            #
-            #     for category in categories_to_delete:
-            #         self.client.delete_category_from_visor(self.instance.api_id, category)
-
         except (APIUpdateError, APICategoryError, APITagError, APIPlaceError) as e:
             self.request.session['msg'] = str(e)
         else:
@@ -223,5 +204,5 @@ class EditForm(forms.ModelForm):
             self.instance.img_file.orientation = self.cleaned_data['orientation']
             self.instance.img_file.save()
             self.instance.mark_as_completed()
-
+        self.request.session['image_data'] = json.dumps(self.cleaned_data)
         return self.instance

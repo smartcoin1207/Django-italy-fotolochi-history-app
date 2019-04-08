@@ -447,3 +447,33 @@ thead {
 .has-top-margin {
     margin-top: 35px;
 }
+
+.login-logo-img {
+    max-width: 300px;
+    opacity: .25;
+}
+
+.login-logo-img:hover {
+    opacity: .30;
+}
+
+.login-box {
+    background-color: black;
+    border: 0;
+    box-sizing: none;
+}
+
+.login-field {
+    width: 100%;
+    background: #222;
+    color: #fff;
+    margin-bottom: 20px;
+    border: none;
+    outline: none;
+    font-size: 24px;
+    padding: 10px 5%;
+    font-weight: bold;
+    font-family: 'Poppins', sans-serif;
+
+}
+
