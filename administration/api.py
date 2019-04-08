@@ -6,9 +6,11 @@ from api.core import APIUpdateError, APIClient
 from .helpers import (
     check_orientation,
     detect_color_image,
-    resize_and_crop,
     hash_file_name,
     make_preview,
+    get_rotation,
+    rotate,
+    resize,
     Image
 )
 from .models import ImageData, ImageFile
@@ -18,19 +20,26 @@ class APIDeleteError(Exception):
     pass
 
 
-def delete_image_data(image_data):
-    if not image_data.api_id:
-        return image_data.delete()
+def delete_visor(file_name):
+    try:
+        image_data = ImageData.objects.get(img_file__file_name=file_name)
+    except ImageData.DoesNotExist:
+        image_data = None
+
+    if image_data:
+        image_data.delete()
 
     client = APIClient()
     try:
-        res = client.delete_visor(image_data.api_id)
-    except APIUpdateError as e:
-        raise APIDeleteError('File \'{}\' could not be deleted'.format(image_data.title))
+        visor = client.get_file(file_name)
+        res = client.delete_visor(visor['_key'])
+    except APIUpdateError:
+        raise APIDeleteError('File \'{}\' could not be deleted'.format(file_name))
+    except KeyError:
+        raise APIDeleteError('File \'{}\' not found in api'.format(file_name))
     else:
         if not res:
-            raise APIDeleteError('File \'{}\' could not be deleted'.format(image_data.title))
-        return image_data.delete()
+            raise APIDeleteError('File \'{}\' could not be deleted'.format(file_name))
 
 
 def import_file(file_path, file_name, file_info=None):
@@ -43,18 +52,21 @@ def import_file(file_path, file_name, file_info=None):
     """
     orientation = check_orientation(file_path)
     color = detect_color_image(file=file_path)
+    rotation = get_rotation(file_path)
+    rotate(file_path, rotation)
     thumb_name = 'thumb_' + file_name
     preview_name = 'prev_' + file_name
 
     original = Image.open(file_path)
-    # ext_original = hash_file_name(file_name)
+
     ext_original = file_name
     original.save(os.path.join(settings.ORIGINAL_ROOT, ext_original))
 
-    ext_thumb = hash_file_name(thumb_name)
-    thumb = resize_and_crop(file_path, os.path.join(settings.THUMB_ROOT, ext_thumb), size=(128, 128))
+    ext_thumb = thumb_name
+    thumb = resize(file_path, os.path.join(settings.THUMB_ROOT, ext_thumb), settings.MIN_THUMB_SIZE)
+    # thumb = resize_and_crop(file_path, os.path.join(settings.THUMB_ROOT, ext_thumb), size=(128, 128))
 
-    ext_prev = hash_file_name(preview_name)
+    ext_prev = preview_name
     preview = make_preview(file_path, os.path.join(settings.PREVIEW_ROOT, ext_prev), size=(1000, 1000))
 
     if not preview:

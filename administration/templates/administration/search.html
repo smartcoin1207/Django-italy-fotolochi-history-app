@@ -1,13 +1,14 @@
 {% extends "administration/base.html" %}
 
+{% load static %}
+
 {% csrf_token %}
 
 {% block navbar %}
 <div class="navbar-item">
     <div class="field is-grouped">
         <p class="control">
-            <a href="/administration/get_new/">Get New Images</a>&nbsp;&nbsp;&nbsp;&nbsp;
-            <a href="{% url 'administration:taxonomies' %}">Add locations/categories</a>
+            <a href="/administration/get_new/">Get New Images</a>
         </p>
     </div>
 </div>
@@ -21,7 +22,8 @@
             <form method="get" action="{% url 'administration:search' %}">
                 <div class="field has-addons">
                     <div class="control is-expanded">
-                        <input class="input" type="text" name="file" placeholder="Cerca file">
+                        <input class="input" type="text" name="file" placeholder="Cerca file"
+                               value="{{ search_value }}">
                     </div>
                     <div class="control">
                         <button type="submit" class="button is-black">
@@ -33,9 +35,7 @@
         </section>
 
         {% if msg %}
-        <div class="box">
-            <p style="color: green; text-align: center; font-weight: bold;">{{ msg }}</p>
-        </div>
+        <p style="color: green; background-color: #f5f5f5;">{{ msg }}</p>
         {% endif %}
         <table id="tbl" class="table is-striped is-fullwidth">
             <thead>
@@ -51,13 +51,14 @@
 
             {% for row in list %}
             <tr>
-                <td><a href="{% url 'administration:edit' file_name=row.img_file.file_name %}"><img
-                        src="/media/{{ row.img_file.thumb_name }}" alt="current img" data-object-fit="contain"></a></td>
-                <td><a href="{% url 'administration:edit' file_name=row.img_file.file_name %}">{{ row.title }}</a></td>
-                <td><a href="{% url 'administration:edit' file_name=row.img_file.file_name %}">{{ row.img_file.file_name}}</a></td>
-                <td>{% if row.api_id %}Yes{% else %}No{% endif %}</td>
+                <td><a href="{% url 'administration:edit' file_name=row.file_name %}?from=1"><img
+                        src="http://151.11.48.110/plesk-site-preview/fotolocchi.it/151.11.48.110/samples/{{ row.file_name }}" onerror="this.src={% static 'img/header-logo.png' %}"
+                        alt="{{ row.file_name }}" data-object-fit="contain" width="100"/></a></td>
+                <td><a href="{% url 'administration:edit' file_name=row.file_name %}?from=1">{{ row.title }}</a></td>
+                <td><a href="{% url 'administration:edit' file_name=row.file_name %}?from=1">{{ row.file_name }}</a></td>
+                <td>Yes</td>
                 <td>
-                    <a class="button" href="{% url 'administration:edit' file_name=row.img_file.file_name %}">
+                    <a class="button" href="{% url 'administration:edit' file_name=row.file_name %}?from=1">
                         <span class="icon"><i class="fas fa-edit" aria-hidden="true"></i></span>
                     </a>
                 </td>

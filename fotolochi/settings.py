@@ -133,6 +133,7 @@ FTP_ROOT = os.path.join(MEDIA_ROOT, 'original_tmp/')
 ORIGINAL_ROOT = os.path.join(MEDIA_ROOT, 'original/')
 THUMB_ROOT = os.path.join(MEDIA_ROOT, 'thumb/')
 PREVIEW_ROOT = os.path.join(MEDIA_ROOT, 'preview/')
+MIN_THUMB_SIZE = 128
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static_files'),

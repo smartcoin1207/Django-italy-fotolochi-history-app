@@ -1,7 +1,20 @@
 import json
 import requests
+from datetime import datetime
 
 from django.conf import settings
+
+
+def is_integer(s):
+    try:
+        int(s)
+    except:
+        return False
+    return True
+
+
+class APIError(Exception):
+    pass
 
 
 class APIUpdateError(Exception):
@@ -25,7 +38,7 @@ class APIClient:
     VALID_OPS = {
         "categories": "ls_c",
         "visors": "ls_v",
-        "places": "ls_l",
+        # "places": "ls_l",
         "tags": "ls_t"
     }
 
@@ -49,6 +62,9 @@ class APIClient:
             raise APIUpdateError(resp.content)
         if resp.json() in ['NO FILE', 'NO DATA', 'NO CMD', 'NO VISOR']:
             raise APIUpdateError('Update failed {}'.format(resp.json()))
+        # XXX: hack to replace search call
+        if op == 'ls_v' and 'WRONG VISOR' in resp.json():
+            return []
         return resp.json()
 
     def _cache(self, item, func):
@@ -73,11 +89,16 @@ class APIClient:
             'Utenza': '1' if data.get('scope', '') else '0',
             'Creative': 'S' if data.get('creative') else 'N',
             'Rating': str(data.get('rating', 0)),
-            'StatoProdotto': data.get('status'),
+            'StatoProdotto': 'S' if data.get('is_publish') else 'N',
             'Note': data.get('notes', ''),
             'Supporto': data.get('support', '6x6'),
-            'Orientamento': data.get('orientation', '1')
+            'Orientamento': data.get('orientation', '1'),
+            'Link': data.get('shop_link', '')
         }
+        # if data.get('api_id'):
+        #     payload.update({
+        #         'visor': data['api_id']
+        #     })
         if data.get('color'):
             payload.update({
                 'Colore': data['color']
@@ -90,24 +111,84 @@ class APIClient:
             payload.update({'Anno': '{}'.format(data['year'])})
         if data.get('is_decennary'):
             payload.update({'Decennio': 'S'})
-        if create and data.get('place'):
+        if data.get('place'):
             payload.update({
                 'Luogo': data['place']
             })
-        if create and data.get('tags'):
+        if data.get('tags'):
             payload.update({
                 'Tags': "|".join(data['tags'])
             })
-        if create and data.get('categories'):
+        if data.get('categories'):
             payload.update({
                 'Categoria': ";".join(data['categories'])
             })
         return payload
 
+    def _convert_api_data(self, **data):
+        if data.get('Data'):
+            date = datetime.strptime(data['Data'], '%Y-%m-%d')
+            day, month, year = date.day, date.month, date.year
+        else:
+            day = month = year = None
+        return {
+            'archive': data.get('Archivio'),
+            'color': data.get('Colore'),
+            'place': data.get('Luogo'),
+            'year': year or data.get('Anno'),
+            'file_name': data.get('File'),
+            'api_id': data.get('_key'),
+            'creative': False if data.get('Creative', 'N') == 'N' else True,
+            'scope': '1' if data.get('Utenza', '0') == '1' else '2',
+            'title': data.get('Nome'),
+            'tags': data.get('Tags'),
+            'is_decennary': True if data.get('Decennio', 'N') == 'S' else False,
+            'is_publish': True if data.get('Stato', 'N') == 'S' else False,
+            'day': day,
+            'month': month,
+            'short_description': data.get('DescBreve'),
+            'full_description': data.get('DescLunga'),
+            'support': data.get('Supporto'),
+            'notes': data.get('Note'),
+            'rating': data.get('Rating'),
+            'orientation': data.get('Orientamento'),
+            'categories': data.get('Categoria'),
+            'shop_link': data.get('Link')
+        }
+
+    def create_tag(self, value):
+        res = self._make_request("in_t", data={"Nome": value})
+        return res
+
+    def create_category(self, parent, name):
+        res = self._make_request("in_c", data={"parent": parent, "Name": name})
+        if 'ERR INS' in res:
+            raise APIUpdateError('Categoria {} non è stata aggiunta'.format(name))
+        return res
+
+    def create_place(self, name):
+        res = self._make_request("in_l", data={"Nome": name})
+        if 'ERR INS' in res:
+            raise APIUpdateError('Luogo {} non è stato aggiunto'.format(name))
+        return res
+
+    def create_archive(self, name):
+        res = self._make_request("in_a", data={"Nome": name})
+        if 'ERR INS' in res:
+            raise APIUpdateError('Archivio {} non è stato aggiunto'.format(name))
+        return res
+
     @property
     def archives(self):
-        # TODO: Add real response?
-        return [('Pic', 'Pic'), ('Other', 'Other')]
+        # return [('Pic', 'Pic'), ('Other', 'Other')]
+        resp = self._make_request("ls_a")
+        return zip(resp, resp)
+
+    @property
+    def places(self):
+        resp = self._make_request("ls_l")
+        res = [i[1] for i in resp]
+        return list(zip(res, res))
 
     def update_visor(self, key, **data):
         op = "in_v"
@@ -120,15 +201,43 @@ class APIClient:
         else:
             prepared_data = self._prepare_form_data(**data)
         resp = self._make_request(op, data=prepared_data)
+
         if 'IN DATA' in resp:
+            raise APIUpdateError(resp)
+        if 'ERR INS VISOR' in resp:
+            raise APIUpdateError(resp)
+        if 'ERR MOD VISOR' in resp:
             raise APIUpdateError(resp)
         return resp
 
-    def get_file(self, filename):
+    def get_file(self, filename, get_content=False):
         resp = self._make_request('vk_v', data={'File': filename})
         if resp == 'NO VISOR KEY':
-            return None
-        return resp
+            return {}
+        if get_content:
+            try:
+                return self._convert_api_data(
+                    **self._make_request('dt_v', data={'visor': resp})
+                )
+            except Exception as exc:
+                raise APIError(exc)
+        else:
+            return {'_key': resp}
+
+    def search(self, value):
+        # TODO: Add pagination?
+        op = 'ls_v'
+        # Check for V00000 pattern
+        if value.startswith('V') and is_integer(value[1:]):
+            return [self._convert_api_data(**i) for i in self._make_request(op, data={'key': value})]
+        else:
+            results = {}
+            for i in ['name', 'file']:
+                current = [self._convert_api_data(**i) for i in self._make_request(op, data={i: value})]
+                for j in current:
+                    if j['api_id'] not in results:
+                        results[j['api_id']] = j
+            return list(results.values())[:100]
 
     def delete_visor(self, key):
         op = "dl_v"

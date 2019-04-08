@@ -13,17 +13,30 @@
 {% endblock %}
 
 {% block pre_css %}
-<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.1/css/selectize.min.css'>
+<link rel='stylesheet prefetch' href="{% static 'css/lightbox.min.css' %}">
 {% endblock %}
 
 {% block main %}
+{% if request.session.msg %}
+    <div class="box has-top-margin">
+        <p style="color: green; text-align: center; font-weight: bold;">{{ request.session.msg }}</p>
+    </div>
+{% endif %}
 <form action="." method="post">
     <div class="columns">
         <div class="column is-narrow is-offset-2">
             <div class="fotolocchi-side-img">
-                File: {{ form.img_file.file_name }}
+                <span class="fotolocchi-side-img-title">File: {{ form.initial.file_name }}</span>
                 <figure class="image">
-                    <img src="/media/{{ form.img_file.preview_name }}"/>
+                    {% if form.img_file %}
+                    <a href="/media/{{ form.img_file.preview_name }}" data-lightbox="{{ form.initial.file_name }}">
+                        <img src="/media/{{ form.img_file.preview_name }}"/>
+                    </a>
+                    {% else %}
+                    <a href="http://151.11.48.110/plesk-site-preview/fotolocchi.it/151.11.48.110/samples/{{ form.initial.file_name }}" data-lightbox="{{ form.initial.file_name }}">
+                        <img src="http://151.11.48.110/plesk-site-preview/fotolocchi.it/151.11.48.110/samples/{{ form.initial.file_name }}"/>
+                    </a>
+                    {% endif %}
                 </figure>
             </div>
             <div class="field">
@@ -37,6 +50,11 @@
                 <label class="label">Orientation</label>
                 <div class="control">
                     {{ form.orientation }}
+                </div>
+            </div>
+            <div class="field">
+                <div class="control">
+                    <button id="compile_image_data" class="button is-small is-black">Autofill dall'ultima foto</button>
                 </div>
             </div>
         </div>
@@ -75,11 +93,22 @@
             </div>
 
             <div class="field">
-                <label class="label">Note</label>
-                <div class="control">
+                <label class="label is-greyed">Note</label>
+                <div class="control is-greyed">
                     {{ form.notes }}
                 </div>
             </div>
+
+            <div class="field">
+                <label class="label">Link d'acquisto</label>
+                <div class="control is-greyed">
+                    {{ form.shop_link }}
+                </div>
+                {% if form.shop_link.errors %}
+                <p class="help is-danger">{% for error in form.shop_link.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
+            </div>
+
             <div class="columns">
                 <div class="column">
                     <div class="field">
@@ -93,6 +122,7 @@
                             {% if form.day.errors %}
                             <p class="help is-danger">{% for error in form.day.errors %}{{ error }}{% endfor %}</p>
                             {% endif %}
+                            &nbsp;
                             <p class="control">
                                 {{ form.month }}
                             </p>
@@ -114,29 +144,16 @@
                         {% endif %}
                     </div>
                 </div>
-                <div class="column">
-                    <div class="field">
-
-                            <label class="label">Decade</label>
-
-                        <p class="control">
-                            {{ form.is_decennary }}
-                        </p>
-                        {% if form.is_decennary.errors %}
-                        <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
-                        {% endif %}
-                    </div>
-                </div>
             </div>
 
-
             <div class="field">
-                <div class="control">
-                    <label class="label">Supporto</label>
-                    <div class="select">
-                        {{ form.support }}
-                    </div>
-                </div>
+                <label class="checkbox label">
+                    {{ form.is_decennary }}
+                    Decade
+                </label>
+                {% if form.is_decennary.errors %}
+                <p class="help is-danger">{% for error in form.is_decennary.errors %}{{ error }}{% endfor %}</p>
+                {% endif %}
             </div>
 
             <div class="field">
@@ -147,6 +164,17 @@
                 {% if form.place.errors %}
                 <p class="help is-danger">{% for error in form.place.errors %}{{ error }}{% endfor %}</p>
                 {% endif %}
+            </div>
+
+            <div class="is-divider"></div>
+
+            <div class="field">
+                <div class="control">
+                    <label class="label">Supporto</label>
+                    <div class="select">
+                        {{ form.support }}
+                    </div>
+                </div>
             </div>
 
             <div class="field">
@@ -179,6 +207,8 @@
                 {% endif %}
             </div>
 
+            <div class="is-divider"></div>
+
             <div class="field">
                 <div class="control">
                     <label class="label">Archivio</label>
@@ -192,17 +222,7 @@
             </div>
 
             <div class="field">
-                <label class="label">Creative</label>
-                <div class="control">
-                    {{ form.creative }}
-                </div>
-            </div>
-
-            <div class="field">
-                <label class="label">Is publish</label>
-                <div class="control">
-                    {{ form.is_publish }}
-                </div>
+                <label class="label checkbox">{{ form.creative }}&nbsp;Creative</label>
             </div>
 
             <div class="field">
@@ -212,15 +232,31 @@
                 </div>
             </div>
 
-            <div class="field is-grouped">
+            <div class="field">
+                <label class="checkbox label">
+                    {{ form.is_publish }}&nbsp;Public
+                </label>
+            </div>
+
+            <div class="field is-grouped has-top-margin">
                 <div class="control">
-                    <button class="button is-link">Submit</button>
+                    <button class="button is-large is-black">{{ save_button_label|default:'Salva e modifica la foto successiva' }}</button>
                 </div>
                 <div class="control">
-                    <button class="button is-text">Cancel</button>
+                    <a class="button is-text is-large delete-button" href="{% url 'administration:delete' file_name=form.initial.file_name %}">Delete</a>
                 </div>
             </div>
         </div>
     </div>
 </form>
+{% endblock %}
+
+
+{% block post_js %}
+<script src="{% static 'js/lightbox.min.js'%}"></script>
+{% if request.session.image_data %}
+<script>
+    window.fotolocchi_image_data = {{ request.session.image_data|safe }};
+</script>
+{% endif %}
 {% endblock %}

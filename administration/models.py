@@ -50,8 +50,8 @@ class ImageData(models.Model):
         (PRODUCT_STATUS_NOT_PUBLISHED, 'Non publicato')
     )
 
-    ONLY_EDITORIAL = 'S'
-    EDITORIAL_AND_STAMP = 'N'
+    ONLY_EDITORIAL = '1'
+    EDITORIAL_AND_STAMP = '2'
     SCOPE = (
         (ONLY_EDITORIAL, 'Solo editoriale'),
         (EDITORIAL_AND_STAMP, 'Editoriale e stampa')
@@ -59,9 +59,10 @@ class ImageData(models.Model):
 
     img_file = models.ForeignKey(ImageFile, on_delete=models.CASCADE)
     api_id = models.CharField(max_length=255, unique=True, db_index=True, null=True, blank=True)
-    title = models.CharField(null=True, max_length=128)
-    short_description = models.CharField(null=True, max_length=128)
-    full_description = models.CharField(null=True, max_length=128)
+    title = models.CharField(null=True, max_length=255)
+    shop_link = models.CharField(null=True, max_length=255)
+    short_description = models.CharField(null=True, max_length=255)
+    full_description = models.TextField(null=True)
     date_updated = models.DateTimeField(auto_now=True)
     day = models.IntegerField(null=True, blank=True)
     month = models.IntegerField(null=True, blank=True)
@@ -69,8 +70,10 @@ class ImageData(models.Model):
     is_decennary = models.BooleanField(default=False)
     rating = models.IntegerField(null=True)
     creative = models.BooleanField(default=False)
-    is_publish = models.BooleanField(default=False)
+    is_publish = models.BooleanField(default=True)
+    # hi_tags = SeparatedValuesField(max_length=255, null=True, blank=True)
     tags = SeparatedValuesField(max_length=255, null=True, blank=True)
+    # low_tags = SeparatedValuesField(max_length=255, null=True, blank=True)
     categories = SeparatedValuesField(max_length=255, null=True, blank=True, token=';')
     place = models.TextField(null=True, blank=True)
     archive = models.CharField(max_length=255, null=True, blank=True)
@@ -91,3 +94,11 @@ class ImageData(models.Model):
                 self.year:
             self.is_completed = True
             self.save()
+
+    def get_next_by_filename(self):
+        if getattr(self, 'img_file', False):
+            return ImageData.objects.select_related(
+                'img_file'
+            ).order_by('img_file__file_name').filter(
+                img_file__file_name__gt=self.img_file.file_name, is_completed=False).first()
+        return None
