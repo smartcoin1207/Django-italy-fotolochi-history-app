@@ -88,7 +88,7 @@ class ImageData(models.Model):
 
     def mark_as_completed(self):
         if self.api_id and self.place and self.archive and self.title and \
-                self.short_description and self.full_description and \
+                self.short_description and \
                 self.categories and len(self.categories) > 0 and \
                 self.tags and len(self.tags) and self.rating and \
                 self.year:
